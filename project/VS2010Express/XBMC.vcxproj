@@ -35,6 +35,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release (DirectX)|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <CharacterSet>MultiByte</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug (DirectX)|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -191,7 +192,7 @@
     <ClCompile>
       <AdditionalOptions>/MP %(AdditionalOptions)</AdditionalOptions>
       <Optimization>Full</Optimization>
-      <InlineFunctionExpansion>Default</InlineFunctionExpansion>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <OmitFramePointers>true</OmitFramePointers>
       <AdditionalIncludeDirectories>..\..\;..\..\xbmc\;..\..\xbmc\win32\;..\..\xbmc\cores\dvdplayer;..\..\lib;..\..\lib\ffmpeg;..\..\lib\ffmpeg\include-xbmc-win32;..\..\lib\liblame\include;..\..\lib\libUPnP\Platinum\Source\Devices\MediaRenderer;..\..\lib\libUPnP\Platinum\Source\Devices\MediaConnect;..\..\lib\libUPnP\Platinum\Source\Devices\MediaServer;..\..\lib\libUPnP\Platinum\Source\Platinum;..\..\lib\libUPnP\Platinum\Source\Core;..\..\lib\libUPnP\Neptune\Source\Core;..\..\lib\libUPnP\Neptune\Source\System\Win32;..\..\lib\win32\pcre;..\..\lib\win32;..\..\xbmc\cores\AudioEngine</AdditionalIncludeDirectories>
@@ -200,9 +201,9 @@
       <MinimalRebuild>false</MinimalRebuild>
       <ExceptionHandling>Async</ExceptionHandling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <BufferSecurityCheck>true</BufferSecurityCheck>
-      <FunctionLevelLinking>false</FunctionLevelLinking>
-      <EnableEnhancedInstructionSet>StreamingSIMDExtensions</EnableEnhancedInstructionSet>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
@@ -211,15 +212,16 @@
       <ForcedIncludeFiles>pch.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <ShowIncludes>false</ShowIncludes>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
     </ClCompile>
     <Link>
-      <AdditionalOptions>/MACHINE:I386 /IGNORE:4089 /ignore:4254 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/IGNORE:4089 /ignore:4254 %(AdditionalOptions)</AdditionalOptions>
       <AdditionalDependencies>D3D9.lib;D3dx9.lib;DInput8.lib;DSound.lib;winmm.lib;ws2_32.lib;Mpr.lib;Iphlpapi.lib;PowrProf.lib;setupapi.lib;dwmapi.lib;strmiids.lib;dxguid.lib;mfuuid.lib;comctl32.lib;yajl.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)XBMC.exe</OutputFile>
       <AdditionalLibraryDirectories>..\..\lib\libSDL-WIN32\lib;..\..\xbmc\cores\DSPlayer\Libs;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreSpecificDefaultLibraries>libc;msvcrt;libci;msvcprt;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <DelayLoadDLLs>dnssd.dll;dwmapi.dll;libmicrohttpd-5.dll;ssh.dll;sqlite3.dll;libsamplerate-0.dll;%(DelayLoadDLLs)</DelayLoadDLLs>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
       <ProgramDatabaseFile>$(OutDir)XBMC.pdb</ProgramDatabaseFile>
       <SubSystem>Windows</SubSystem>
       <LargeAddressAware>true</LargeAddressAware>
@@ -258,7 +260,6 @@
       <AdditionalOptions>/MACHINE:I386 /IGNORE:4089 /ignore:4254 %(AdditionalOptions)</AdditionalOptions>
       <AdditionalDependencies>SDL.lib;D3D9.lib;DInput8.lib;DSound.lib;winmm.lib;ws2_32.lib;Mpr.lib;Iphlpapi.lib;PowrProf.lib;setupapi.lib;dwmapi.lib;yajl.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)XBMC.exe</OutputFile>
-      <AdditionalLibraryDirectories>..\..\lib\libSDL-WIN32\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreSpecificDefaultLibraries>libc;msvcrt;libcmt;msvcrtd;msvcprtd;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <ModuleDefinitionFile>
       </ModuleDefinitionFile>
