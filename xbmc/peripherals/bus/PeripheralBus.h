@@ -100,6 +100,13 @@ namespace PERIPHERALS
      */
     virtual int GetPeripheralsWithFeature(std::vector<CPeripheral *> &results, const PeripheralFeature feature) const;
 
+    /*!
+     * @brief Get number of peripheral instances that have the given feature.
+     * @param feature The feature to search for.
+     * @return The number of devices that have been found.
+     */
+    virtual int GetNumberOfPeripheralsWithFeature(const PeripheralFeature feature) const;
+
     virtual size_t GetNumberOfPeripherals() const;
 
     /*!

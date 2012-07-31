@@ -204,6 +204,22 @@ int CPeripherals::GetPeripheralsWithFeature(vector<CPeripheral *> &results, cons
   return iReturn;
 }
 
+int CPeripherals::GetNumberOfPeripheralsWithFeature(const PeripheralFeature feature, PeripheralBusType busType /* = PERIPHERAL_BUS_UNKNOWN */) const
+{
+  int iReturn(0);
+  CSingleLock lock(m_critSection);
+  for (unsigned int iBusPtr = 0; iBusPtr < m_busses.size(); iBusPtr++)
+  {
+    /* check whether the bus matches if a bus type other than unknown was passed */
+    if (busType != PERIPHERAL_BUS_UNKNOWN && m_busses.at(iBusPtr)->Type() != busType)
+      continue;
+
+    iReturn += m_busses.at(iBusPtr)->GetNumberOfPeripheralsWithFeature(feature);
+  }
+
+  return iReturn;
+}
+
 size_t CPeripherals::GetNumberOfPeripherals() const
 {
   size_t iReturn(0);
@@ -218,8 +234,7 @@ size_t CPeripherals::GetNumberOfPeripherals() const
 
 bool CPeripherals::HasPeripheralWithFeature(const PeripheralFeature feature, PeripheralBusType busType /* = PERIPHERAL_BUS_UNKNOWN */) const
 {
-  vector<CPeripheral *> dummy;
-  return (GetPeripheralsWithFeature(dummy, feature, busType) > 0);
+  return (GetNumberOfPeripheralsWithFeature(feature, busType) > 0);
 }
 
 CPeripheral *CPeripherals::CreatePeripheral(CPeripheralBus &bus, const PeripheralType type, const CStdString &strLocation, int iVendorId /* = 0 */, int iProductId /* = 0 */)
