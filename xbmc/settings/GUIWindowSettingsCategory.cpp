@@ -260,6 +260,15 @@ bool CGUIWindowSettingsCategory::OnMessage(CGUIMessage &message)
   return CGUIWindow::OnMessage(message);
 }
 
+void CGUIWindowSettingsCategory::Update()
+{
+  int focusedControl = GetFocusedControlID();
+  CSingleLock lock(g_graphicsContext);
+  CheckForUpdates();
+  CreateSettings();
+  SET_CONTROL_FOCUS(focusedControl, 0);
+}
+
 void CGUIWindowSettingsCategory::SetupControls()
 {
   // cleanup first, if necessary

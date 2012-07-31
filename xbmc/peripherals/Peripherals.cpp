@@ -30,6 +30,7 @@
 #include "devices/PeripheralCecAdapter.h"
 #include "bus/PeripheralBusUSB.h"
 #include "dialogs/GUIDialogPeripheralManager.h"
+#include "settings/GUIWindowSettingsCategory.h"
 
 #include "threads/SingleLock.h"
 #include "utils/log.h"
@@ -326,6 +327,10 @@ void CPeripherals::OnDeviceAdded(const CPeripheralBus &bus, const CPeripheral &p
   if (dialog && dialog->IsActive())
     dialog->Update();
 
+  CGUIWindowSettingsCategory * window = (CGUIWindowSettingsCategory *)g_windowManager.GetWindow(WINDOW_SETTINGS_SYSTEM);
+  if (window && window->IsActive())
+    window->Update();
+
   CGUIDialogKaiToast::QueueNotification(CGUIDialogKaiToast::Info, g_localizeStrings.Get(35005), peripheral.DeviceName());
 }
 
@@ -334,6 +339,10 @@ void CPeripherals::OnDeviceDeleted(const CPeripheralBus &bus, const CPeripheral 
   CGUIDialogPeripheralManager *dialog = (CGUIDialogPeripheralManager *)g_windowManager.GetWindow(WINDOW_DIALOG_PERIPHERAL_MANAGER);
   if (dialog && dialog->IsActive())
     dialog->Update();
+
+  CGUIWindowSettingsCategory * window = (CGUIWindowSettingsCategory *)g_windowManager.GetWindow(WINDOW_SETTINGS_SYSTEM);
+  if (window && window->IsActive())
+    window->Update();
 
   CGUIDialogKaiToast::QueueNotification(CGUIDialogKaiToast::Info, g_localizeStrings.Get(35006), peripheral.DeviceName());
 }
