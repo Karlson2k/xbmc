@@ -26,7 +26,7 @@
 #include "input/ButtonTranslator.h"
 #if defined(_WIN32) && defined(HAS_SDL_JOYSTICK)
 #include "utils/SystemInfo.h"
-#include "settings/GUISettings.h"
+#include "settings/GUIWindowSettingsCategory.h"
 #include "input/windows/WINJoystick.h"
 #include "peripherals/Peripherals.h"
 #include "guilib/GUIWindowManager.h"
@@ -67,9 +67,12 @@ CPeripheralHID::~CPeripheralHID(void)
       CSetting* setting = g_guiSettings.GetSetting("input.disablejoystickwithimon");
       if(setting)
         setting->SetVisible(false);
-      /*CGUIWindow *dialog = g_windowManager.GetWindow(WINDOW_SETTINGS_SYSTEM);
-      if (dialog && dialog->IsActive())
-        dialog->Update();*/
+      CGUIWindowSettingsCategory * window = (CGUIWindowSettingsCategory *)g_windowManager.GetWindow(WINDOW_SETTINGS_SYSTEM);
+      if (window && window->IsActive())
+	  {window->ResetControlStates();
+	  //window->DoRender();
+		  //window-> 
+	  }//dialog->Update();
     }
 #endif
 }
