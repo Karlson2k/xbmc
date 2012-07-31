@@ -24,6 +24,12 @@
 #include "settings/Settings.h"
 #include "guilib/LocalizeStrings.h"
 #include "input/ButtonTranslator.h"
+#if defined(_WIN32) && defined(HAS_SDL_JOYSTICK)
+#include "utils/SystemInfo.h"
+#include "settings/GUISettings.h"
+#include "input/windows/WINJoystick.h"
+#endif
+
 
 using namespace PERIPHERALS;
 using namespace std;
@@ -33,6 +39,10 @@ CPeripheralHID::CPeripheralHID(const PeripheralType type, const PeripheralBusTyp
   m_bInitialised(false)
 {
   m_features.push_back(FEATURE_HID);
+#if defined(_WIN32) && defined(HAS_SDL_JOYSTICK)
+  if (strDeviceName.Equals("Problematic iMON"))
+    m_features.push_back(FEATURE_PROBLEMIMON);
+#endif
 }
 
 CPeripheralHID::~CPeripheralHID(void)
@@ -76,6 +86,18 @@ bool CPeripheralHID::InitialiseFeature(const PeripheralFeature feature)
         CButtonTranslator::GetInstance().RemoveDevice(m_strKeymap);
       }
     }
+#if defined(_WIN32) && defined(HAS_SDL_JOYSTICK)
+    else if (feature == FEATURE_PROBLEMIMON)
+    {
+      g_sysinfo.SetProblemImonIsPresent(true);
+      g_Joystick.SetEnabled(!g_guiSettings.GetBool("input.disablejoystickwithimon") && g_guiSettings.GetBool("input.enablejoystick"));
+      CLog::Log(LOGNOTICE, "Problematic iMON hardware detected. Joystick usage: %s", 
+        (!g_guiSettings.GetBool("input.disablejoystickwithimon") && g_guiSettings.GetBool("input.enablejoystick"))?"disabled." : "enabled." );
+      CSetting* setting = g_guiSettings.GetSetting("input.disablejoystickwithimon");
+      if(setting)
+        setting->SetVisible(!setting->IsAdvanced());
+    }
+#endif
 
     CLog::Log(LOGDEBUG, "%s - initialised HID device (%s:%s)", __FUNCTION__, m_strVendorId.c_str(), m_strProductId.c_str());
   }
