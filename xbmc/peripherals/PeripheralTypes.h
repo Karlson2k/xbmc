@@ -48,6 +48,9 @@ namespace PERIPHERALS
     FEATURE_CEC,
     FEATURE_BLUETOOTH,
     FEATURE_TUNER
+#ifdef _WIN32
+    ,FEATURE_PROBLEMIMON 
+#endif
   };
 
   enum PeripheralType
