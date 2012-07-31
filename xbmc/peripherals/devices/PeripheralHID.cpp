@@ -63,16 +63,13 @@ CPeripheralHID::~CPeripheralHID(void)
       g_sysinfo.SetProblemImonIsPresent(false);
       CLog::Log(LOGNOTICE, "Problematic iMON hardware was removed. Joystick usage: %s", 
         (g_guiSettings.GetBool("input.enablejoystick")) ? "enabled." : "disabled." );
-      g_Joystick.SetEnabled(g_guiSettings.GetBool("input.enablejoystick"));
+      //g_Joystick.SetEnabled(g_guiSettings.GetBool("input.enablejoystick"));
       CSetting* setting = g_guiSettings.GetSetting("input.disablejoystickwithimon");
       if(setting)
         setting->SetVisible(false);
       CGUIWindowSettingsCategory * window = (CGUIWindowSettingsCategory *)g_windowManager.GetWindow(WINDOW_SETTINGS_SYSTEM);
       if (window && window->IsActive())
-	  {window->ResetControlStates();
-	  //window->DoRender();
-		  //window-> 
-	  }//dialog->Update();
+		  window->Update();
     }
 #endif
 }
@@ -122,6 +119,9 @@ bool CPeripheralHID::InitialiseFeature(const PeripheralFeature feature)
     CSetting* setting = g_guiSettings.GetSetting("input.disablejoystickwithimon");
     if(setting)
       setting->SetVisible(!setting->IsAdvanced());
+    CGUIWindowSettingsCategory * window = (CGUIWindowSettingsCategory *)g_windowManager.GetWindow(WINDOW_SETTINGS_SYSTEM);
+    if (window && window->IsActive())
+		window->Update();
   }
 #endif
 
