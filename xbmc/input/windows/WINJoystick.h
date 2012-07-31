@@ -85,11 +85,13 @@ private:
   uint8_t m_ActiveFlags;
   uint32_t m_lastPressTicks;
   uint32_t m_lastTicks;
+  CCriticalSection m_critSection;
 
   LPDIRECTINPUT8  m_pDI;
   std::vector<LPDIRECTINPUTDEVICE8> m_pJoysticks;
   std::vector<std::string> m_JoystickNames;
   std::vector<DIDEVCAPS> m_devCaps;
+
 };
 
 extern CJoystick g_Joystick;

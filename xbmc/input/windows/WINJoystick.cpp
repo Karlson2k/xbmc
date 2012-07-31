@@ -483,6 +483,7 @@ void CJoystick::SetEnabled(bool enabled /*=true*/)
 {
   if( enabled && !m_joystickEnabled )
   {
+    CSingleLock lock(m_critSection);
     m_joystickEnabled = true;
     Initialize();
   }
