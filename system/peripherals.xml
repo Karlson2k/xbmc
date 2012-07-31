@@ -33,7 +33,7 @@
   </peripheral>
 
   <peripheral vendor_product="16C0:05DF" bus="usb" name="Problematic iMON" mapTo="hid">
-    <setting key="do_not_use_custom_keymap" type="bool" value="1" label="35009" order="1" configurable="0"/>
+    <setting key="do_not_use_custom_keymap" type="bool" value="1" label="35009" order="1" configurable="1"/>
   </peripheral>
 
 </peripherals>
