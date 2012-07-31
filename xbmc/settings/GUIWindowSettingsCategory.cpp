@@ -1391,10 +1391,11 @@ void CGUIWindowSettingsCategory::OnSettingChanged(CBaseSettingControl *pSettingC
   {
     g_Mouse.SetEnabled(g_guiSettings.GetBool("input.enablemouse"));
   }
-  else if (strSetting.Equals("input.enablejoystick"))
+  else if (strSetting.Equals("input.enablejoystick") || strSetting.Equals("input.disablejoystickwithimon"))
   {
 #if defined(HAS_SDL_JOYSTICK)
-    g_Joystick.SetEnabled(g_guiSettings.GetBool("input.enablejoystick"));
+    g_Joystick.SetEnabled(g_guiSettings.GetBool("input.enablejoystick") && 
+      (!g_sysinfo.IsProblemImonPresent() || !g_guiSettings.GetBool("input.disablejoystickwithimon")));
 #endif
   }
   else if (strSetting.Equals("videoscreen.screen"))

@@ -1359,7 +1359,8 @@ bool CApplication::Initialize()
   ResetScreenSaver();
 
 #ifdef HAS_SDL_JOYSTICK
-  g_Joystick.SetEnabled(g_guiSettings.GetBool("input.enablejoystick"));
+  g_Joystick.SetEnabled(g_guiSettings.GetBool("input.enablejoystick") && 
+      (!g_sysinfo.IsProblemImonPresent() || !g_guiSettings.GetBool("input.disablejoystickwithimon")));
 #endif
 
   return true;
