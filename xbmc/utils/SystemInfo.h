@@ -44,6 +44,9 @@ public:
   void Reset()
   {
     internetState = UNKNOWN;
+#if defined(TARGET_WINDOWS) && defined(HAS_SDL_JOYSTICK)
+    problemImonIsPresent = false;
+#endif
   };
 
   CStdString systemUptime;
@@ -54,6 +57,9 @@ public:
   CStdString kernelVersion;
   CStdString macAddress;
   CStdString batteryLevel;
+#if defined(TARGET_WINDOWS) && defined(HAS_SDL_JOYSTICK)
+  bool problemImonIsPresent;
+#endif
 };
 
 class CSysInfoJob : public CJob
@@ -110,6 +116,10 @@ public:
   bool GetDiskSpace(const CStdString drive,int& iTotal, int& iTotalFree, int& iTotalUsed, int& iPercentFree, int& iPercentUsed);
   CStdString GetHddSpaceInfo(int& percent, int drive, bool shortText=false);
   CStdString GetHddSpaceInfo(int drive, bool shortText=false);
+#if defined(_WIN32) && defined(HAS_SDL_JOYSTICK)
+  void SetProblemImonIsPresent(bool present);
+  bool IsProblemImonPresent();
+#endif
 
 protected:
   virtual CJob *GetJob() const;

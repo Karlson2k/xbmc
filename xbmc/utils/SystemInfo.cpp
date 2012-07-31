@@ -493,6 +493,18 @@ CStdString CSysInfo::GetHddSpaceInfo(int& percent, int drive, bool shortText)
   return strRet;
 }
 
+#if defined(_WIN32) && defined(HAS_SDL_JOYSTICK)
+void CSysInfo::SetProblemImonIsPresent(bool present)
+{
+  m_info.problemImonIsPresent = present;
+}
+bool CSysInfo::IsProblemImonPresent()
+{
+  return m_info.problemImonIsPresent;
+}
+#endif
+
+
 #if defined(_LINUX) && !defined(TARGET_DARWIN) && !defined(__FreeBSD__)
 CStdString CSysInfo::GetLinuxDistro()
 {
