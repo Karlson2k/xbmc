@@ -206,6 +206,28 @@ namespace PERIPHERALS
 #endif
     }
 
+    /*!
+     * @brief Get presence of problematic iMON device.
+     * @return True when problematic iMON is present, false otherwise.
+     */
+    bool IsProblemImonPresent();
+
+    /*!
+     * @brief Increment number of problematic iMON devices.
+     */
+    void IncNumberOfPromlemImons();
+
+    /*!
+     * @brief Decrement number of problematic iMON devices.
+     */
+    void DecNumberOfPromlemImons();
+
+    /*!
+     * @brief Get number of problematic iMON devices.
+     * @return Number of problematic iMON.
+     */
+    int GetNumberOfPromlemImons();
+
   private:
     CPeripherals(void);
     bool LoadMappings(void);
@@ -217,6 +239,7 @@ namespace PERIPHERALS
 #if !defined(HAVE_LIBCEC)
     bool                                 m_bMissingLibCecWarningDisplayed;
 #endif
+	int                                  m_NumberOfProblemImons;
     std::vector<CPeripheralBus *>        m_busses;
     std::vector<PeripheralDeviceMapping> m_mappings;
     CSettingsCategory *                  m_settings;

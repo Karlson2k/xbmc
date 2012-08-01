@@ -91,6 +91,7 @@ void CPeripherals::Initialise(void)
         m_busses.erase(m_busses.begin() + iBusPtr);
       }
     }
+    m_NumberOfProblemImons = 0;
 
     m_bInitialised = true;
   }
@@ -117,6 +118,7 @@ void CPeripherals::Clear(void)
   /* reset class state */
   m_bIsStarted   = false;
   m_bInitialised = false;
+  m_NumberOfProblemImons = 0;
 #if !defined(HAVE_LIBCEC)
   m_bMissingLibCecWarningDisplayed = false;
 #endif
@@ -681,4 +683,24 @@ bool CPeripherals::GetNextKeypress(float frameTime, CKey &key)
   }
 
   return false;
+}
+
+bool CPeripherals::IsProblemImonPresent()
+{
+  return m_NumberOfProblemImons > 0;
+}
+
+void CPeripherals::IncNumberOfPromlemImons()
+{
+  m_NumberOfProblemImons++;
+}
+
+void CPeripherals::DecNumberOfPromlemImons()
+{
+  m_NumberOfProblemImons--;
+}
+
+int CPeripherals::GetNumberOfPromlemImons()
+{
+  return m_NumberOfProblemImons;
 }
