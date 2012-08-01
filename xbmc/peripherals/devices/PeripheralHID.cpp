@@ -57,7 +57,9 @@ CPeripheralHID::~CPeripheralHID(void)
   }
 #if defined(_WIN32) && defined(HAS_SDL_JOYSTICK)
   if (HasFeature(FEATURE_PROBLEMIMON))
-    if (!g_peripherals.HasPeripheralWithFeature(FEATURE_PROBLEMIMON))
+  {
+    g_peripherals.DecNumberOfPromlemImons(); 
+	if (!g_peripherals.IsProblemImonPresent())
     {
       // Itself instance is already excluded from total feature count
       g_sysinfo.SetProblemImonIsPresent(false);
@@ -69,8 +71,9 @@ CPeripheralHID::~CPeripheralHID(void)
         setting->SetVisible(false);
       CGUIWindowSettingsCategory * window = (CGUIWindowSettingsCategory *)g_windowManager.GetWindow(WINDOW_SETTINGS_SYSTEM);
       if (window && window->IsActive())
-		  window->Update();
+		window->Update();
     }
+  }
 #endif
 }
 
@@ -113,6 +116,7 @@ bool CPeripheralHID::InitialiseFeature(const PeripheralFeature feature)
   else if (feature == FEATURE_PROBLEMIMON)
   {
     g_sysinfo.SetProblemImonIsPresent(true);
+	g_peripherals.IncNumberOfPromlemImons();
     CLog::Log(LOGNOTICE, "Problematic iMON hardware detected. Joystick usage: %s", 
       (!g_guiSettings.GetBool("input.disablejoystickwithimon") && g_guiSettings.GetBool("input.enablejoystick")) ? "enabled." : "disabled." );
     g_Joystick.SetEnabled(!g_guiSettings.GetBool("input.disablejoystickwithimon") && g_guiSettings.GetBool("input.enablejoystick"));
