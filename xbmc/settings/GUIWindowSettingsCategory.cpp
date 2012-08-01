@@ -264,7 +264,7 @@ void CGUIWindowSettingsCategory::Update()
 {
   int focusedControl = GetFocusedControlID();
   CSingleLock lock(g_graphicsContext);
-  CheckForUpdates();
+  //CheckForUpdates();
   CreateSettings();
   SET_CONTROL_FOCUS(focusedControl, 0);
 }
