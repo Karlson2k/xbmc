@@ -51,6 +51,7 @@ extern HWND g_hWnd;
 
 CJoystick::CJoystick()
 {
+  CSingleLock lock(m_critSection);
   Reset(true);
   m_joystickEnabled = false;
   m_NumAxes = 0;
@@ -74,6 +75,7 @@ CJoystick::~CJoystick()
 
 void CJoystick::ReleaseJoysticks()
 {
+  CSingleLock lock(m_critSection);
   // Unacquire the device one last time just in case
   // the app tried to exit while the device is still acquired.
   for(std::vector<LPDIRECTINPUTDEVICE8>::iterator it = m_pJoysticks.begin(); it != m_pJoysticks.end(); ++it)
@@ -183,6 +185,7 @@ void CJoystick::Initialize()
 
   // clear old joystick names
   ReleaseJoysticks();
+  CSingleLock lock(m_critSection);
 
   if( FAILED( hr = DirectInput8Create( GetModuleHandle( NULL ), DIRECTINPUT_VERSION, IID_IDirectInput8, ( VOID** )&m_pDI, NULL ) ) )
   {
@@ -483,7 +486,7 @@ void CJoystick::SetEnabled(bool enabled /*=true*/)
 {
   if( enabled && !m_joystickEnabled )
   {
-    CSingleLock lock(m_critSection);
+    //CSingleLock lock(m_critSection);
     m_joystickEnabled = true;
     Initialize();
   }

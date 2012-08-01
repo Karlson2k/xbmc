@@ -22,6 +22,7 @@
 
 #include <vector>
 #include <string>
+#include "threads/CriticalSection.h"
 
 #define JACTIVE_BUTTON 0x00000001
 #define JACTIVE_AXIS   0x00000002
