@@ -855,7 +855,7 @@ int CalculateMinutes( int seconds )
 //-------------------------------------------------------------------------
 
 //-------------------------------------------------------------------------
-DWORD64 ntohll(DWORD64 llValue)
+/*DWORD64 ntohll(DWORD64 llValue)
 {
     DWORD64 retval = 0;
 
@@ -883,7 +883,7 @@ DWORD64 ntohll(DWORD64 llValue)
     MoveMemory(&retval,szInt64,sizeof(retval));
 
     return retval;
-}
+}*/
 
 //-------------------------------------------------------------------------
 void ConvertProgramInfoEndian(struct tagProgramInfo * strProgramInfo)
