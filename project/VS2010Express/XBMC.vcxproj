@@ -185,6 +185,7 @@
       <RandomizedBaseAddress>true</RandomizedBaseAddress>
       <DataExecutionPrevention>true</DataExecutionPrevention>
       <TargetMachine>MachineX86</TargetMachine>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
     <Manifest>
       <AdditionalManifestFiles>VC90.CRT.x86.manifest;%(AdditionalManifestFiles)</AdditionalManifestFiles>
