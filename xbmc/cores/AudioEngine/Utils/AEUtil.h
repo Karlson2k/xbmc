@@ -33,6 +33,9 @@
 
 #ifdef __SSE__
 #include <xmmintrin.h>
+#if _MSC_VER > 1600
+#include <emmintrin.h>
+#endif
 #else
 #define __m128 void
 #endif
