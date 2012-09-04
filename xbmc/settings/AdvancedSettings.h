@@ -99,8 +99,8 @@ class CAdvancedSettings
     static void GetCustomRegexpReplacers(TiXmlElement *pRootElement, CStdStringArray& settings);
     static void GetCustomExtensions(TiXmlElement *pRootElement, CStdString& extensions);
 
-    int m_audioHeadRoom;
-    float m_ac3Gain;
+    int m_audioHeadRoom; // TODO: Remove? Not used.
+    float m_ac3Gain; // TODO: Remove? Not used.
     CStdString m_audioDefaultPlayer;
     float m_audioPlayCountMinimumPercent;
     bool m_dvdplayerIgnoreDTSinWAV;
@@ -112,8 +112,8 @@ class CAdvancedSettings
     bool m_streamSilence;
     int m_audioSinkBufferDurationMsec;
     CStdString m_audioTranscodeTo;
-    float m_limiterHold;
-    float m_limiterRelease;
+    float m_limiterHold; // TODO: Remove? Not used.
+    float m_limiterRelease; // TODO: Remove? Not used.
 
     float m_videoSubsDelayRange;
     float m_videoAudioDelayRange;
@@ -144,7 +144,7 @@ class CAdvancedSettings
     int m_videoIgnoreSecondsAtStart;
     float m_videoIgnorePercentAtEnd;
     CStdString m_audioHost;
-    bool m_audioApplyDrc;
+    bool m_audioApplyDrc;  // TODO: Remove? Not used.
 
     bool  m_videoVDPAUScaling;
     float m_videoNonLinStretchRatio;
