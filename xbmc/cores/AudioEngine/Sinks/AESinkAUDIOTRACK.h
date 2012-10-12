@@ -22,6 +22,14 @@
 #include "Interfaces/AESink.h"
 #include "Utils/AEDeviceInfo.h"
 
+class CAUDIOTRACKSpecificDeviceInfo : public CSinkSpecificDeviceInfo
+{
+public:
+  CAUDIOTRACKSpecificDeviceInfo();
+  virtual ~CAUDIOTRACKSpecificDeviceInfo();
+  virtual AESinkType GetSinkType() { return AE_SINK_AUDIOTRACK; }
+};
+
 class AERingBuffer;
 
 class CAESinkAUDIOTRACK : public CThread, public IAESink

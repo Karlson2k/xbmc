@@ -26,6 +26,14 @@
 
 #include "threads/CriticalSection.h"
 
+class CDirectSoundSpecificDeviceInfo : public CSinkSpecificDeviceInfo
+{
+public:
+  CDirectSoundSpecificDeviceInfo();
+  virtual ~CDirectSoundSpecificDeviceInfo();
+  virtual AESinkType GetSinkType() { return AE_SINK_DIRECTSOUND; }
+};
+
 class CAESinkDirectSound : public IAESink
 {
 public:

@@ -892,7 +892,7 @@ void CAESinkALSA::EnumerateDevice(AEDeviceInfoList &list, const std::string &dev
 
   int cardNr = snd_pcm_info_get_card(pcminfo);
 
-  CAEDeviceInfo info;
+  CAEDeviceInfo info(AE_SINK_ALSA);
   info.m_deviceName = device;
   info.m_deviceType = AEDeviceTypeFromName(device);
 
@@ -1052,15 +1052,16 @@ void CAESinkALSA::EnumerateDevice(AEDeviceInfoList &list, const std::string &dev
   }
 
   CAEChannelInfo alsaChannels;
+  info.m_channelsFormats.push_back(CAEChannelInfo()); // FIXME: Probably can be better implemented
   for (int i = 0; i < channels; ++i)
   {
-    if (!info.m_channels.HasChannel(ALSAChannelMap[i]))
-      info.m_channels += ALSAChannelMap[i];
+    if (!info.m_channelsFormats[0].HasChannel(ALSAChannelMap[i]))
+      info.m_channelsFormats[0] += ALSAChannelMap[i];
     alsaChannels += ALSAChannelMap[i];
   }
 
-  /* remove the channels from m_channels that we cant use */
-  info.m_channels.ResolveChannels(alsaChannels);
+  /* remove the channels from m_channelsFormats[0] that we cant use */
+  info.m_channelsFormats[0].ResolveChannels(alsaChannels);
 
   /* detect the PCM sample formats that are available */
   for (enum AEDataFormat i = AE_FMT_MAX; i > AE_FMT_INVALID; i = (enum AEDataFormat)((int)i - 1))
