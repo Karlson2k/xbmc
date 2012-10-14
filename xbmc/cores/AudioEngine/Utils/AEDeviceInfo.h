@@ -77,8 +77,12 @@ public:
   std::string       m_displayNameExtra;	/* additional display name info, ie, monitor name from ELD */
   enum AEDeviceType m_deviceType;	    /* the device type, PCM, IEC958 or HDMI */
   AEChannelInfoList m_channelsFormats;  /* the channels the device is capable of rendering */
-  AESampleRateList  m_sampleRates;	    /* the PCM samplerates the device is capable of rendering */
+  AESampleRateList  m_sampleRates;	    /* the basic PCM samplerates the device is capable of rendering */
   AEDataFormatList  m_dataFormats;	    /* the dataformats the device is capable of rendering */
+
+  bool SupportsRaw() const;
+  void SortLists();
+  std::string GetAEDeviceName() const;
 
 #if defined(TARGET_WINDOWS)
   CWASAPISpecificDeviceInfo&      WASAPIDeviceInfo();
@@ -94,9 +98,11 @@ public:
 
   CAEDeviceInfo(AESinkType sinkType);
   CAEDeviceInfo(const CAEDeviceInfo& deviceInfo);
+  CAEDeviceInfo(CAEDeviceInfo&& deviceInfo);
   ~CAEDeviceInfo();
   operator std::string();
   static std::string DeviceTypeToString(enum AEDeviceType deviceType);
+  static std::string SinkTypeToString(enum AESinkType sinkType);
 private:
   CSinkSpecificDeviceInfo* m_ptrSinkSpecificInfo;
 };
