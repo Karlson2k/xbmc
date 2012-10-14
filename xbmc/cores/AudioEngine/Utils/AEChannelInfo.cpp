@@ -188,6 +188,12 @@ bool CAEChannelInfo::operator!=(const CAEChannelInfo& rhs)
   return !(*this == rhs);
 }
 
+bool CAEChannelInfo::operator<(const CAEChannelInfo& rhs)
+{
+  return Count() < rhs.Count();
+}
+
+
 CAEChannelInfo& CAEChannelInfo::operator+=(const enum AEChannel& rhs)
 {
   ASSERT(m_channelCount < AE_CH_MAX);
