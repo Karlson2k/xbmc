@@ -57,6 +57,10 @@ enum AEDeviceType {
   AE_DEVTYPE_DP
 };
 
+/**
+ * Sinks must store specific to sink device information in derived class
+ * Information can be modified on each sink call and preserved between sink calls
+ */
 class CSinkSpecificDeviceInfo
 {
 public:
@@ -80,20 +84,20 @@ public:
   AESampleRateList  m_sampleRates;	    /* the basic PCM samplerates the device is capable of rendering */
   AEDataFormatList  m_dataFormats;	    /* the dataformats the device is capable of rendering */
 
-  bool SupportsRaw() const;
-  void SortLists();
-  std::string GetAEDeviceName() const;
+  bool SupportsRaw() const;             /* returns ability to support RAW formats. m_dataFormats must be sorted!*/
+  void SortLists();                     /* sort vector members. Called automatically when CAEDeviceInfo object is pushed to vector */
+  std::string GetAEDeviceName() const;  
 
 #if defined(TARGET_WINDOWS)
-  CWASAPISpecificDeviceInfo&      WASAPIDeviceInfo();
-  CDirectSoundSpecificDeviceInfo& DirectSoundDeviceInfo();
+  CWASAPISpecificDeviceInfo&      WASAPIDeviceInfo();       /* access to WASAPI specific device information */
+  CDirectSoundSpecificDeviceInfo& DirectSoundDeviceInfo();  /* access to DirectSound specific device information */
 #elif defined(TARGET_ANDROID)
-  CAUDIOTRACKSpecificDeviceInfo&  AUDIOTRACKDeviceInfo();
+  CAUDIOTRACKSpecificDeviceInfo&  AUDIOTRACKDeviceInfo();   /* access to AUDIOTRACK specific device information */
 #elif defined(TARGET_LINUX) || defined(TARGET_FREEBSD)
 #if defined(HAS_ALSA)
-  CALSASpecificDeviceInfo&        ALSADeviceInfo();
+  CALSASpecificDeviceInfo&        ALSADeviceInfo();         /* access to ALSA specific device information */
 #endif
-  COSSSpecificDeviceInfo&         OSSDeviceInfo();
+  COSSSpecificDeviceInfo&         OSSDeviceInfo();          /* access to OSS specific device information */
 #endif
 
   CAEDeviceInfo(AESinkType sinkType);
