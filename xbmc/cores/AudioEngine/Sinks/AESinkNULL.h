@@ -28,6 +28,7 @@ class CAESinkNULL : public IAESink
 {
 public:
   virtual const char *GetName() { return "NULL"; }
+  virtual enum AESinkType GetType() { return AE_SINK_NULL; }
 
   CAESinkNULL();
   virtual ~CAESinkNULL();

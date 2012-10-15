@@ -31,6 +31,7 @@ class IAESink
 public:
   /* return the name of this sync for logging */
   virtual const char *GetName() = 0;
+  virtual enum AESinkType GetType() = 0;
 
   IAESink() {};
   virtual ~IAESink() {};

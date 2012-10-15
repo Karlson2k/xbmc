@@ -37,6 +37,7 @@ class CAESinkOSS : public IAESink
 {
 public:
   virtual const char *GetName() { return "OSS"; }
+  virtual enum AESinkType GetType() { return AE_SINK_OSS; }
 
   CAESinkOSS();
   virtual ~CAESinkOSS();

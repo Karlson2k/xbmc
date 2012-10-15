@@ -36,6 +36,7 @@ class CAESinkAUDIOTRACK : public CThread, public IAESink
 {
 public:
   virtual const char *GetName() { return "AUDIOTRACK"; }
+  virtual enum AESinkType GetType() { return AE_SINK_AUDIOTRACK; }
 
   CAESinkAUDIOTRACK();
   virtual ~CAESinkAUDIOTRACK();

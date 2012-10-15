@@ -38,6 +38,7 @@ class CAESinkDirectSound : public IAESink
 {
 public:
   virtual const char *GetName() { return "DirectSound"; }
+  virtual enum AESinkType GetType() { return AE_SINK_DIRECTSOUND; }
 
   CAESinkDirectSound();
   virtual ~CAESinkDirectSound();

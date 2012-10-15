@@ -28,6 +28,7 @@ class CAESinkProfiler : public IAESink
 {
 public:
   virtual const char *GetName() { return "Profiler"; }
+  virtual enum AESinkType GetType() { return AE_SINK_PROFILER; }
 
   CAESinkProfiler();
   virtual ~CAESinkProfiler();

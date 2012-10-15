@@ -39,6 +39,7 @@ class CAESinkWASAPI : public IAESink
 {
 public:
     virtual const char *GetName() { return "WASAPI"; }
+    virtual enum AESinkType GetType() { return AE_SINK_WASAPI; }
 
     CAESinkWASAPI();
     virtual ~CAESinkWASAPI();
