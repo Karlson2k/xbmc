@@ -56,7 +56,7 @@ void CAESinkProfiler::Deinitialize()
 {
 }
 
-bool CAESinkProfiler::IsCompatible(CAEDeviceInfo *devicePtr, const AEAudioFormat format)
+bool CAESinkProfiler::IsCompatible(CAEDeviceInfo *devicePtr, const AEAudioFormat &format)
 {
   if (AE_IS_RAW(format.m_dataFormat))
     return false;

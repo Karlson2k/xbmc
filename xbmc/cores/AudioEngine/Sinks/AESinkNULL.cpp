@@ -70,7 +70,7 @@ void CAESinkNULL::Deinitialize()
 {
 }
 
-bool CAESinkNULL::IsCompatible(CAEDeviceInfo *devicePtr, const AEAudioFormat format)
+bool CAESinkNULL::IsCompatible(CAEDeviceInfo *devicePtr, const AEAudioFormat &format)
 {
   return false;
 }
