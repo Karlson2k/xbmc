@@ -120,15 +120,12 @@ private:
   bool SetupEncoder(AEAudioFormat &format);
   void Deinitialize();
 
-  inline void GetDeviceFriendlyName(std::string &device);
-
-  IAESink *GetSink(AEAudioFormat &desiredFormat, bool passthrough, CAEDeviceInfo* devicePtr);
+  IAESink *GetSink(AEAudioFormat &desiredFormat, bool passthrough, CAEDeviceInfo* &devicePtr);
   void StopAllSounds();
 
   enum AEStdChLayout m_stdChLayout;
   CAEDeviceInfo* m_devicePtr;
   CAEDeviceInfo* m_passthroughDevicePtr;
-  std::string m_deviceFriendlyName; // TODO: Remove?
   bool m_audiophile;
   bool m_stereoUpmix;
 

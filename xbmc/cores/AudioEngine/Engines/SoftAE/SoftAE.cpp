@@ -115,9 +115,9 @@ CSoftAE::~CSoftAE()
   }
 }
 
-IAESink *CSoftAE::GetSink(AEAudioFormat &newFormat, bool passthrough, CAEDeviceInfo *devicePtr)
+IAESink *CSoftAE::GetSink(AEAudioFormat &newFormat, bool passthrough, CAEDeviceInfo* &devicePtr)
 {
-  devicePtr = passthrough ? m_passthroughDevicePtr : m_devicePtr;
+  devicePtr = (passthrough && m_passthroughDevicePtr) ? m_passthroughDevicePtr : m_devicePtr;
 
   /* if we are raw, force the sample rate */
   if (AE_IS_RAW(newFormat.m_dataFormat))
@@ -252,18 +252,6 @@ void CSoftAE::InternalOpenSink()
 
   streamLock.Leave();
 
-  std::string driver;
-  CAEDeviceInfo *devicePtr;
-  if (m_transcode || m_rawPassthrough)
-    devicePtr = m_passthroughDevicePtr;
-  else
-    devicePtr = m_devicePtr;
-
-  /*CAESinkFactory::ParseDevice(device, driver);
-  if (driver.empty() && m_sink)
-    driver = m_sink->GetName(); */ //TODO: do it right
-  driver = CAEDeviceInfo::SinkTypeToString(devicePtr->m_sinkType); // TODO: NULL check
-
   if (m_rawPassthrough)
     CLog::Log(LOGINFO, "CSoftAE::InternalOpenSink - RAW passthrough enabled");
   else if (m_transcode)
@@ -287,21 +275,23 @@ void CSoftAE::InternalOpenSink()
     if there is an audio resample rate set, use it, this MAY NOT be honoured as
     the audio sink may not support the requested format, and may change it.
   */
-  if (g_advancedSettings.m_audioResample)
+  if (g_advancedSettings.m_audioResample && g_advancedSettings.m_audioResample != newFormat.m_sampleRate)
   {
     newFormat.m_sampleRate = g_advancedSettings.m_audioResample;
     CLog::Log(LOGINFO, "CSoftAE::InternalOpenSink - Forcing samplerate to %d", newFormat.m_sampleRate);
   }
 
-  /* only re-open the sink if its not compatible with what we need */
-  std::string sinkName;
-  if (m_sink)
+  CAEDeviceInfo *devicePtr;
+  if ((m_transcode || m_rawPassthrough) && m_passthroughDevicePtr)
+    devicePtr = m_passthroughDevicePtr;
+  else
   {
-    sinkName = m_sink->GetName();
-    std::transform(sinkName.begin(), sinkName.end(), sinkName.begin(), ::toupper);
+    m_transcode = m_rawPassthrough = false;
+    devicePtr = m_devicePtr;
   }
 
-  if (!m_sink || sinkName != driver || !m_sink->IsCompatible(devicePtr, newFormat))
+  /* only re-open the sink if its not compatible with what we need */
+  if (!m_sink || devicePtr && (m_sink->GetType() != devicePtr->m_sinkType || !m_sink->IsCompatible(devicePtr, newFormat)))
   {
     CLog::Log(LOGINFO, "CSoftAE::InternalOpenSink - sink incompatible, re-starting");
 
@@ -319,14 +309,6 @@ void CSoftAE::InternalOpenSink()
       m_sink = NULL;
     }
 
-    /* get the display name of the device */
-    // GetDeviceFriendlyName(device); // TODO: Remove?
-    m_deviceFriendlyName = devicePtr->m_displayName;
-
-    /* if we already have a driver, prepend it to the device string */
-    /*if (!driver.empty())
-      device = driver + ":" + device; */ // TODO: remove?
-
     /* create the new sink */
     m_sink = GetSink(newFormat, m_transcode || m_rawPassthrough, devicePtr);
 
@@ -339,7 +321,7 @@ void CSoftAE::InternalOpenSink()
     ASSERT(newFormat.m_sampleRate            > 0);
 
     CLog::Log(LOGDEBUG, "CSoftAE::InternalOpenSink - %s Initialized:", m_sink->GetName());
-    CLog::Log(LOGDEBUG, "  Output Device : %s", m_deviceFriendlyName.c_str());
+    CLog::Log(LOGDEBUG, "  Output Device : %s", devicePtr ? devicePtr->m_displayName:"NULL");
     CLog::Log(LOGDEBUG, "  Sample Rate   : %d", newFormat.m_sampleRate);
     CLog::Log(LOGDEBUG, "  Sample Format : %s", CAEUtil::DataFormatToStr(newFormat.m_dataFormat));
     CLog::Log(LOGDEBUG, "  Channel Count : %d", newFormat.m_channelLayout.Count());
@@ -615,26 +597,6 @@ CAEDeviceInfo* CSoftAE::FindSoundDevice(const std::string& device, bool passthro
   return firstDevice;
 }
 
-inline void CSoftAE::GetDeviceFriendlyName(std::string &device)
-{
-  m_deviceFriendlyName = "Device not found";
-  /* Match the device and find its friendly name */
-  for (AESinkInfoList::iterator itt = m_sinkInfoList.begin(); itt != m_sinkInfoList.end(); ++itt)
-  {
-    AESinkInfo& sinkInfo = *itt;
-    for (AEDeviceInfoList::iterator itt2 = sinkInfo.m_deviceInfoList.begin(); itt2 != sinkInfo.m_deviceInfoList.end(); ++itt2)
-    {
-      CAEDeviceInfo& devInfo = *itt2;
-      if (devInfo.m_deviceName == device)
-      {
-        m_deviceFriendlyName = devInfo.m_displayName;
-        break;
-      }
-    }
-  }
-  return;
-}
-
 void CSoftAE::Deinitialize()
 {
   if (m_thread)
@@ -671,7 +633,7 @@ void CSoftAE::EnumerateOutputDevices(AEDeviceList &devices, bool passthrough)
     for (AEDeviceInfoList::iterator itt2 = sinkInfo.m_deviceInfoList.begin(); itt2 != sinkInfo.m_deviceInfoList.end(); ++itt2)
     {
       CAEDeviceInfo& devInfo = *itt2;
-      if (passthrough && devInfo.m_deviceType == AE_DEVTYPE_PCM)
+      if (passthrough && !devInfo.SupportsRaw())
         continue;
 
       std::string device = devInfo.GetAEDeviceName();

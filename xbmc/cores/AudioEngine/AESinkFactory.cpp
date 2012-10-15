@@ -90,15 +90,14 @@ IAESink *CAESinkFactory::Create(CAEDeviceInfo *devicePtr, AEAudioFormat &desired
   AEAudioFormat  tmpFormat;
   IAESink       *sink;
 
-  if (!devicePtr)
+  if (!devicePtr || devicePtr->m_sinkType == AE_SINK_NULL)
     TRY_SINK(NULL);
 
   if (devicePtr->m_sinkType == AE_SINK_PROFILER)
     TRY_SINK(Profiler);
 
-
 #if defined(TARGET_WINDOWS)
-  if ( devicePtr->m_sinkType == AE_SINK_WASAPI && !g_advancedSettings.m_audioForceDirectSound)
+  if (devicePtr->m_sinkType == AE_SINK_WASAPI)
     TRY_SINK(WASAPI)
   else
     TRY_SINK(DirectSound) // always fall back to DirectSound
