@@ -72,7 +72,9 @@ CSoftAE::CSoftAE():
   m_convertedSize      (0           ),
   m_masterStream       (NULL        ),
   m_outputStageFn      (NULL        ),
-  m_streamStageFn      (NULL        )
+  m_streamStageFn      (NULL        ),
+  m_devicePtr          (NULL        ),
+  m_passthroughDevicePtr(NULL       )
 {
   CAESinkFactory::EnumerateEx(m_sinkInfoList);
   for (AESinkInfoList::iterator itt = m_sinkInfoList.begin(); itt != m_sinkInfoList.end(); ++itt)
@@ -113,9 +115,9 @@ CSoftAE::~CSoftAE()
   }
 }
 
-IAESink *CSoftAE::GetSink(AEAudioFormat &newFormat, bool passthrough, std::string &device)
+IAESink *CSoftAE::GetSink(AEAudioFormat &newFormat, bool passthrough, CAEDeviceInfo *devicePtr)
 {
-  device = passthrough ? m_passthroughDevice : m_device;
+  devicePtr = passthrough ? m_passthroughDevicePtr : m_devicePtr;
 
   /* if we are raw, force the sample rate */
   if (AE_IS_RAW(newFormat.m_dataFormat))
@@ -140,7 +142,7 @@ IAESink *CSoftAE::GetSink(AEAudioFormat &newFormat, bool passthrough, std::strin
     }
   }
 
-  IAESink *sink = CAESinkFactory::Create(device, newFormat, passthrough);
+  IAESink *sink = CAESinkFactory::Create(devicePtr, newFormat, passthrough);
   return sink;
 }
 
@@ -250,15 +252,17 @@ void CSoftAE::InternalOpenSink()
 
   streamLock.Leave();
 
-  std::string device, driver;
+  std::string driver;
+  CAEDeviceInfo *devicePtr;
   if (m_transcode || m_rawPassthrough)
-    device = m_passthroughDevice;
+    devicePtr = m_passthroughDevicePtr;
   else
-    device = m_device;
+    devicePtr = m_devicePtr;
 
-  CAESinkFactory::ParseDevice(device, driver);
+  /*CAESinkFactory::ParseDevice(device, driver);
   if (driver.empty() && m_sink)
-    driver = m_sink->GetName();
+    driver = m_sink->GetName(); */ //TODO: do it right
+  driver = CAEDeviceInfo::SinkTypeToString(devicePtr->m_sinkType); // TODO: NULL check
 
   if (m_rawPassthrough)
     CLog::Log(LOGINFO, "CSoftAE::InternalOpenSink - RAW passthrough enabled");
@@ -297,7 +301,7 @@ void CSoftAE::InternalOpenSink()
     std::transform(sinkName.begin(), sinkName.end(), sinkName.begin(), ::toupper);
   }
 
-  if (!m_sink || sinkName != driver || !m_sink->IsCompatible(newFormat, device))
+  if (!m_sink || sinkName != driver || !m_sink->IsCompatible(devicePtr, newFormat))
   {
     CLog::Log(LOGINFO, "CSoftAE::InternalOpenSink - sink incompatible, re-starting");
 
@@ -316,18 +320,19 @@ void CSoftAE::InternalOpenSink()
     }
 
     /* get the display name of the device */
-    GetDeviceFriendlyName(device);
+    // GetDeviceFriendlyName(device); // TODO: Remove?
+    m_deviceFriendlyName = devicePtr->m_displayName;
 
     /* if we already have a driver, prepend it to the device string */
-    if (!driver.empty())
-      device = driver + ":" + device;
+    /*if (!driver.empty())
+      device = driver + ":" + device; */ // TODO: remove?
 
     /* create the new sink */
-    m_sink = GetSink(newFormat, m_transcode || m_rawPassthrough, device);
+    m_sink = GetSink(newFormat, m_transcode || m_rawPassthrough, devicePtr);
 
     /* perform basic sanity checks on the format returned by the sink */
     ASSERT(newFormat.m_channelLayout.Count() > 0);
-    ASSERT(newFormat.m_dataFormat           <= AE_FMT_FLOAT);
+    ASSERT(AE_IS_INT(newFormat.m_dataFormat) || AE_IS_FLOAT(newFormat.m_dataFormat));
     ASSERT(newFormat.m_frames                > 0);
     ASSERT(newFormat.m_frameSamples          > 0);
     ASSERT(newFormat.m_frameSize            == (CAEUtil::DataFormatToBits(newFormat.m_dataFormat) >> 3) * newFormat.m_channelLayout.Count());
@@ -570,11 +575,9 @@ void CSoftAE::LoadSettings()
   if (!m_rawPassthrough && g_guiSettings.GetInt("audiooutput.mode") == AUDIO_IEC958)
     m_stdChLayout = AE_CH_LAYOUT_2_0;
 
-  /* get the output devices and ensure they exist */
-  m_device            = g_guiSettings.GetString("audiooutput.audiodevice");
-  m_passthroughDevice = g_guiSettings.GetString("audiooutput.passthroughdevice");
-  VerifySoundDevice(m_device           , false);
-  VerifySoundDevice(m_passthroughDevice, true );
+  /* get the output devices names and find them */
+  m_devicePtr              = FindSoundDevice(g_guiSettings.GetString("audiooutput.audiodevice"),       false);
+  m_passthroughDevicePtr   = FindSoundDevice(g_guiSettings.GetString("audiooutput.passthroughdevice"), true );
 
   m_transcode = (
     g_guiSettings.GetBool("audiooutput.ac3passthrough") /*||
@@ -585,31 +588,31 @@ void CSoftAE::LoadSettings()
   );
 }
 
-void CSoftAE::VerifySoundDevice(std::string& device, bool passthrough)
+CAEDeviceInfo* CSoftAE::FindSoundDevice(const std::string& device, bool passthrough)
 {
   /* check that the specified device exists */
-  std::string firstDevice;
+  CAEDeviceInfo* firstDevice = NULL;
   for (AESinkInfoList::iterator itt = m_sinkInfoList.begin(); itt != m_sinkInfoList.end(); ++itt)
   {
     AESinkInfo sinkInfo = *itt;
     for (AEDeviceInfoList::iterator itt2 = sinkInfo.m_deviceInfoList.begin(); itt2 != sinkInfo.m_deviceInfoList.end(); ++itt2)
     {
       CAEDeviceInfo& devInfo = *itt2;
-      if (passthrough && devInfo.m_deviceType == AE_DEVTYPE_PCM)
+      if (passthrough && !devInfo.SupportsRaw())
         continue;
-      std::string deviceName = sinkInfo.m_sinkName + ":" + devInfo.m_deviceName;
+      std::string deviceName = devInfo.GetAEDeviceName();
 
       /* remember the first device so we can default to it if required */
-      if (firstDevice.empty())
-        firstDevice = deviceName;
+      if (!firstDevice)
+        firstDevice = &devInfo;
 
       if (device == deviceName)
-        return;
+        return &devInfo;
     }
   }
 
   /* if the device wasnt found, set it to the first viable output */
-  device = firstDevice;
+  return firstDevice;
 }
 
 inline void CSoftAE::GetDeviceFriendlyName(std::string &device)
@@ -671,7 +674,7 @@ void CSoftAE::EnumerateOutputDevices(AEDeviceList &devices, bool passthrough)
       if (passthrough && devInfo.m_deviceType == AE_DEVTYPE_PCM)
         continue;
 
-      std::string device = sinkInfo.m_sinkName + ":" + devInfo.m_deviceName;
+      std::string device = devInfo.GetAEDeviceName();
 
       std::stringstream ss;
 
@@ -696,7 +699,7 @@ std::string CSoftAE::GetDefaultDevice(bool passthrough)
     for (AEDeviceInfoList::iterator itt2 = sinkInfo.m_deviceInfoList.begin(); itt2 != sinkInfo.m_deviceInfoList.end(); ++itt2)
     {
       CAEDeviceInfo devInfo = *itt2;
-      if (passthrough && devInfo.m_deviceType == AE_DEVTYPE_PCM)
+      if (passthrough && !devInfo.SupportsRaw())
         continue;
 
       std::string device = sinkInfo.m_sinkName + ":" + devInfo.m_deviceName;

@@ -23,6 +23,7 @@
 #include "AE.h"
 #include "AEAudioFormat.h"
 #include "utils/StdString.h"
+#include "../Utils/AEDeviceInfo.h"
 #include <stdint.h>
 
 class IAESink
@@ -39,7 +40,7 @@ public:
     if however it does not honour what is requested, it MUST update device/format
     with what it does support.
   */
-  virtual bool Initialize  (AEAudioFormat &format, std::string &device) = 0;
+  virtual bool Initialize  (CAEDeviceInfo *devicePtr, AEAudioFormat &format) = 0;
 
   /*
     Deinitialize the sink for destruction
@@ -49,7 +50,7 @@ public:
   /*
     Return true if the supplied format and device are compatible with the current open sink
   */
-  virtual bool IsCompatible(const AEAudioFormat format, const std::string device) = 0;
+  virtual bool IsCompatible(CAEDeviceInfo *devicePtr, const AEAudioFormat &format) = 0;
 
   /*
     This method returns the time in seconds that it will take

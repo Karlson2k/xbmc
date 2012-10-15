@@ -65,6 +65,16 @@ static jint GetStaticIntField(JNIEnv *jenv, std::string class_name, std::string 
   return int_field;
 }
 
+CAUDIOTRACKSpecificDeviceInfo::CAUDIOTRACKSpecificDeviceInfo() :
+  CSinkSpecificDeviceInfo()
+{
+}
+
+CAUDIOTRACKSpecificDeviceInfo::~CAUDIOTRACKSpecificDeviceInfo()
+{
+}
+
+
 CAEDeviceInfo CAESinkAUDIOTRACK::m_info(AE_SINK_AUDIOTRACK);
 ////////////////////////////////////////////////////////////////////////////////////////////
 CAESinkAUDIOTRACK::CAESinkAUDIOTRACK()
@@ -84,8 +94,12 @@ CAESinkAUDIOTRACK::~CAESinkAUDIOTRACK()
 #endif
 }
 
-bool CAESinkAUDIOTRACK::Initialize(AEAudioFormat &format, std::string &device)
+bool CAESinkAUDIOTRACK::Initialize(CAEDeviceInfo *devicePtr, AEAudioFormat &format)
 {
+  if (!devicePtr)
+    return false;
+  std::string device = devicePtr->m_deviceName;
+
   m_format = format;
 
   // default to 44100, all android devices support it.
@@ -149,8 +163,11 @@ void CAESinkAUDIOTRACK::Deinitialize()
     _aligned_free(m_alignedS16LE), m_alignedS16LE = NULL;
 }
 
-bool CAESinkAUDIOTRACK::IsCompatible(const AEAudioFormat format, const std::string device)
+bool CAESinkAUDIOTRACK::IsCompatible(CAEDeviceInfo *devicePtr, const AEAudioFormat &format)
 {
+  if (!devicePtr)
+    return false;
+
   return ((m_format.m_sampleRate    == format.m_sampleRate) &&
           (m_format.m_dataFormat    == format.m_dataFormat) &&
           (m_format.m_channelLayout == format.m_channelLayout));

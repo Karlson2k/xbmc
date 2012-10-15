@@ -62,6 +62,16 @@ static int OSSSampleRateList[] =
 };
 #endif
 
+COSSSpecificDeviceInfo::COSSSpecificDeviceInfo():
+    CSinkSpecificDeviceInfo()
+{
+}
+
+COSSSpecificDeviceInfo::~COSSSpecificDeviceInfo()
+{
+}
+
+
 CAESinkOSS::CAESinkOSS()
 {
 }
@@ -91,8 +101,13 @@ std::string CAESinkOSS::GetDeviceUse(const AEAudioFormat format, const std::stri
   return device;
 }
 
-bool CAESinkOSS::Initialize(AEAudioFormat &format, std::string &device)
+bool CAESinkOSS::Initialize(CAEDeviceInfo *devicePtr, AEAudioFormat &format)
 {
+  if (!devicePtr)
+    return false;
+
+  std::string device = devicePtr->m_deviceName;
+
   m_initFormat = format;
   format.m_channelLayout = GetChannelLayout(format);
   device = GetDeviceUse(format, device);

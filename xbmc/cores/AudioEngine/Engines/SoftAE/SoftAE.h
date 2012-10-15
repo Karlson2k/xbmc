@@ -112,7 +112,7 @@ private:
   CSoftAEStream *GetMasterStream();
 
   void LoadSettings();
-  void VerifySoundDevice(std::string &device, bool passthrough);
+  CAEDeviceInfo* FindSoundDevice(const std::string &device, bool passthrough);
   void OpenSink();
 
   void InternalOpenSink();
@@ -122,13 +122,13 @@ private:
 
   inline void GetDeviceFriendlyName(std::string &device);
 
-  IAESink *GetSink(AEAudioFormat &desiredFormat, bool passthrough, std::string &device);
+  IAESink *GetSink(AEAudioFormat &desiredFormat, bool passthrough, CAEDeviceInfo* devicePtr);
   void StopAllSounds();
 
   enum AEStdChLayout m_stdChLayout;
-  std::string m_device;
-  std::string m_passthroughDevice;
-  std::string m_deviceFriendlyName;
+  CAEDeviceInfo* m_devicePtr;
+  CAEDeviceInfo* m_passthroughDevicePtr;
+  std::string m_deviceFriendlyName; // TODO: Remove?
   bool m_audiophile;
   bool m_stereoUpmix;
 
