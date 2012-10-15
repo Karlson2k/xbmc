@@ -66,6 +66,16 @@ static unsigned int ALSASampleRateList[] =
   0
 };
 
+CALSASpecificDeviceInfo::CALSASpecificDeviceInfo() :
+    CSinkSpecificDeviceInfo()
+{
+}
+
+CALSASpecificDeviceInfo::~CALSASpecificDeviceInfo()
+{
+}
+
+
 CAESinkALSA::CAESinkALSA() :
   m_pcm(NULL)
 {
@@ -127,8 +137,13 @@ void CAESinkALSA::GetAESParams(AEAudioFormat format, std::string& params)
   else params += ",AES3=0x01";
 }
 
-bool CAESinkALSA::Initialize(AEAudioFormat &format, std::string &device)
+bool CAESinkALSA::Initialize(CAEDeviceInfo *devicePtr, const AEAudioFormat format)
 {
+  if (!devicePtr)
+    return false;
+
+  std::string device = devicePtr->m_deviceName;
+
   m_initDevice = device;
   m_initFormat = format;
 
@@ -211,8 +226,12 @@ bool CAESinkALSA::Initialize(AEAudioFormat &format, std::string &device)
   return true;
 }
 
-bool CAESinkALSA::IsCompatible(const AEAudioFormat format, const std::string device)
+bool CAESinkALSA::IsCompatible(CAEDeviceInfo *devicePtr, const AEAudioFormat &format)
 {
+  if (!devicePtr)
+    return false;
+
+  std::string device = devicePtr->m_deviceName;
   return (
       /* compare against the requested format and the real format */
       (m_initFormat.m_sampleRate    == format.m_sampleRate    || m_format.m_sampleRate    == format.m_sampleRate   ) &&

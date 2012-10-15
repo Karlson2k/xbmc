@@ -73,12 +73,10 @@ void CAESinkFactory::ParseDevice(std::string &device, std::string &driver)
 #define TRY_SINK(SINK) \
 { \
   tmpFormat = desiredFormat; \
-  tmpDevice = device; \
   sink      = new CAESink ##SINK(); \
-  if (sink->Initialize(tmpFormat, tmpDevice)) \
+  if (sink->Initialize(devicePtr, tmpFormat)) \
   { \
     desiredFormat = tmpFormat; \
-    device        = tmpDevice; \
     return sink; \
   } \
   sink->Deinitialize(); \
@@ -86,38 +84,36 @@ void CAESinkFactory::ParseDevice(std::string &device, std::string &driver)
   sink = NULL; \
 }
 
-IAESink *CAESinkFactory::Create(std::string &device, AEAudioFormat &desiredFormat, bool rawPassthrough)
+IAESink *CAESinkFactory::Create(CAEDeviceInfo *devicePtr, AEAudioFormat &desiredFormat, bool rawPassthrough)
 {
   // extract the driver from the device string if it exists
-  std::string driver;
-  ParseDevice(device, driver);
-
   AEAudioFormat  tmpFormat;
   IAESink       *sink;
-  std::string    tmpDevice;
 
-  if (driver == "PROFILER")
+  if (!devicePtr)
+    TRY_SINK(NULL);
+
+  if (devicePtr->m_sinkType == AE_SINK_PROFILER)
     TRY_SINK(Profiler);
 
 
 #if defined(TARGET_WINDOWS)
-  if ((driver.empty() && g_sysinfo.IsVistaOrHigher() ||
-    driver == "WASAPI") && !g_advancedSettings.m_audioForceDirectSound)
+  if ( devicePtr->m_sinkType == AE_SINK_WASAPI && !g_advancedSettings.m_audioForceDirectSound)
     TRY_SINK(WASAPI)
   else
     TRY_SINK(DirectSound) // always fall back to DirectSound
 
 #elif defined(TARGET_ANDROID)
-  if (driver.empty() || driver == "AUDIOTRACK")
+  if (devicePtr->m_sinkType == AE_SINK_AUDIOTRACK)
     TRY_SINK(AUDIOTRACK)
 
 #elif defined(TARGET_LINUX) || defined(TARGET_FREEBSD)
   #if defined(HAS_ALSA)
-  if (driver.empty() || driver == "ALSA")
+  if (devicePtr->m_sinkType == AE_SINK_ALSA)
     TRY_SINK(ALSA)
   #endif
 
-  if (driver.empty() || driver == "OSS")
+  if (devicePtr->m_sinkType == AE_SINK_OSS)
     TRY_SINK(OSS)
 #endif
 

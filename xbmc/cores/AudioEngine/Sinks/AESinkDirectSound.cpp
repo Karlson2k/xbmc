@@ -91,6 +91,15 @@ static const winEndpointsToAEDeviceType winEndpoints[EndpointFormFactor_enum_cou
 // implemented in AESinkWASAPI.cpp
 extern CStdStringA localWideToUtf(LPCWSTR wstr);
 
+CDirectSoundSpecificDeviceInfo::CDirectSoundSpecificDeviceInfo() :
+  CSinkSpecificDeviceInfo()
+{
+}
+
+CDirectSoundSpecificDeviceInfo::~CDirectSoundSpecificDeviceInfo()
+{
+}
+
 static BOOL CALLBACK DSEnumCallback(LPGUID lpGuid, LPCTSTR lpcstrDescription, LPCTSTR lpcstrModule, LPVOID lpContext)
 {
   DSDevice dev;
@@ -131,9 +140,11 @@ CAESinkDirectSound::~CAESinkDirectSound()
   Deinitialize();
 }
 
-bool CAESinkDirectSound::Initialize(AEAudioFormat &format, std::string &device)
+bool CAESinkDirectSound::Initialize(CAEDeviceInfo *devicePtr, AEAudioFormat &format)
 {
   if (m_initialized)
+    return false;
+  if (!devicePtr)
     return false;
 
   LPGUID deviceGUID = NULL;
@@ -150,7 +161,7 @@ bool CAESinkDirectSound::Initialize(AEAudioFormat &format, std::string &device)
       hr = (UuidToString((*itt).lpGuid, &wszUuid));
       std::string sztmp = (char*)wszUuid;
       std::string szGUID = "{" + std::string(sztmp.begin(), sztmp.end()) + "}";
-      if (strcasecmp(szGUID.c_str(), device.c_str()) == 0)
+      if (strcasecmp(szGUID.c_str(), devicePtr->m_deviceName.c_str()) == 0)
       {
         deviceGUID = (*itt).lpGuid;
         deviceFriendlyName = (*itt).name.c_str();
@@ -267,7 +278,7 @@ bool CAESinkDirectSound::Initialize(AEAudioFormat &format, std::string &device)
   format.m_dataFormat = AE_IS_RAW(format.m_dataFormat) ? AE_FMT_S16NE : AE_FMT_FLOAT;
 
   m_format = format;
-  m_device = device;
+  m_device = devicePtr->m_deviceName;
 
   m_BufferOffset = 0;
   m_CacheLen = 0;
@@ -322,10 +333,13 @@ void CAESinkDirectSound::Deinitialize()
   m_dwBufferLen = 0;
 }
 
-bool CAESinkDirectSound::IsCompatible(const AEAudioFormat format, const std::string device)
+bool CAESinkDirectSound::IsCompatible(CAEDeviceInfo *devicePtr, const AEAudioFormat &format)
 {
   if (!m_initialized || m_isDirtyDS)
     return false;
+  if (!devicePtr)
+    return false;
+  std::string device = devicePtr->m_deviceName;
 
   u_int notCompatible         = 0;
   const u_int numTests        = 6;
@@ -624,7 +638,6 @@ void CAESinkDirectSound::EnumerateDevicesEx(AEDeviceInfoList &deviceInfoList)
 
     /* Now logged by AESinkFactory on startup */
     //CLog::Log(LOGDEBUG,"Audio Device %d:    %s", i, ((std::string)deviceInfo).c_str());
-
     deviceInfoList.push_back(deviceInfo);
   }
 

@@ -145,8 +145,8 @@ AEDeviceInfoList DeviceInfoList;
 
 DEFINE_PROPERTYKEY(PKEY_Device_FriendlyName, 0xa45c254e, 0xdf1c, 0x4efd, 0x80, 0x20, 0x67, 0xd1, 0x46, 0xa8, 0x50, 0xe0, 14);
 
-CWASAPISpecificDeviceInfo::CWASAPISpecificDeviceInfo(void)
-  :CSinkSpecificDeviceInfo()
+CWASAPISpecificDeviceInfo::CWASAPISpecificDeviceInfo(void) :
+  CSinkSpecificDeviceInfo()
 {
 }
 
@@ -206,12 +206,14 @@ CAESinkWASAPI::~CAESinkWASAPI()
 
 }
 
-bool CAESinkWASAPI::Initialize(AEAudioFormat &format, std::string &device)
+bool CAESinkWASAPI::Initialize(CAEDeviceInfo *devicePtr, AEAudioFormat &format)
 {
   if (m_initialized)
     return false;
+  if (!devicePtr)
+    return false;
 
-  m_device = device;
+  m_device = devicePtr->m_deviceName;
 
   /* Save requested format */
   /* Clear returned format */
@@ -254,7 +256,7 @@ bool CAESinkWASAPI::Initialize(AEAudioFormat &format, std::string &device)
 
     std::string strDevName = localWideToUtf(varName.pwszVal);
 
-    if (device == strDevName)
+    if (m_device == strDevName)
       i = uiCount;
     else
       SAFE_RELEASE(m_pDevice);
@@ -267,7 +269,7 @@ bool CAESinkWASAPI::Initialize(AEAudioFormat &format, std::string &device)
 
   if (!m_pDevice)
   {
-    CLog::Log(LOGINFO, __FUNCTION__": Could not locate the device named \"%s\" in the list of WASAPI endpoint devices.  Trying the default device...", device.c_str());
+    CLog::Log(LOGINFO, __FUNCTION__": Could not locate the device named \"%s\" in the list of WASAPI endpoint devices.  Trying the default device...", m_device.c_str());
     hr = pEnumerator->GetDefaultAudioEndpoint(eRender, eConsole, &m_pDevice);
     EXIT_ON_FAILURE(hr, __FUNCTION__": Could not retrieve the default WASAPI audio endpoint.")
 
@@ -358,10 +360,14 @@ void CAESinkWASAPI::Deinitialize()
   m_initialized = false;
 }
 
-bool CAESinkWASAPI::IsCompatible(const AEAudioFormat format, const std::string device)
+bool CAESinkWASAPI::IsCompatible(CAEDeviceInfo *devicePtr, const AEAudioFormat &format)
 {
   if (!m_initialized || m_isDirty)
     return false;
+  if (!devicePtr)
+    return false;
+
+  std::string device = devicePtr->m_deviceName;
 
   u_int notCompatible         = 0;
   const u_int numTests        = 5;
