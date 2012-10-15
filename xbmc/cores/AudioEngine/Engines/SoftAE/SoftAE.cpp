@@ -594,7 +594,7 @@ CAEDeviceInfo* CSoftAE::FindSoundDevice(const std::string& device, bool passthro
   CAEDeviceInfo* firstDevice = NULL;
   for (AESinkInfoList::iterator itt = m_sinkInfoList.begin(); itt != m_sinkInfoList.end(); ++itt)
   {
-    AESinkInfo sinkInfo = *itt;
+    AESinkInfo& sinkInfo = *itt;
     for (AEDeviceInfoList::iterator itt2 = sinkInfo.m_deviceInfoList.begin(); itt2 != sinkInfo.m_deviceInfoList.end(); ++itt2)
     {
       CAEDeviceInfo& devInfo = *itt2;
@@ -621,7 +621,7 @@ inline void CSoftAE::GetDeviceFriendlyName(std::string &device)
   /* Match the device and find its friendly name */
   for (AESinkInfoList::iterator itt = m_sinkInfoList.begin(); itt != m_sinkInfoList.end(); ++itt)
   {
-    AESinkInfo sinkInfo = *itt;
+    AESinkInfo& sinkInfo = *itt;
     for (AEDeviceInfoList::iterator itt2 = sinkInfo.m_deviceInfoList.begin(); itt2 != sinkInfo.m_deviceInfoList.end(); ++itt2)
     {
       CAEDeviceInfo& devInfo = *itt2;
@@ -667,10 +667,10 @@ void CSoftAE::EnumerateOutputDevices(AEDeviceList &devices, bool passthrough)
 {
   for (AESinkInfoList::iterator itt = m_sinkInfoList.begin(); itt != m_sinkInfoList.end(); ++itt)
   {
-    AESinkInfo sinkInfo = *itt;
+    AESinkInfo& sinkInfo = *itt;
     for (AEDeviceInfoList::iterator itt2 = sinkInfo.m_deviceInfoList.begin(); itt2 != sinkInfo.m_deviceInfoList.end(); ++itt2)
     {
-      CAEDeviceInfo devInfo = *itt2;
+      CAEDeviceInfo& devInfo = *itt2;
       if (passthrough && devInfo.m_deviceType == AE_DEVTYPE_PCM)
         continue;
 
@@ -695,10 +695,10 @@ std::string CSoftAE::GetDefaultDevice(bool passthrough)
 {
   for (AESinkInfoList::iterator itt = m_sinkInfoList.begin(); itt != m_sinkInfoList.end(); ++itt)
   {
-    AESinkInfo sinkInfo = *itt;
+    AESinkInfo& sinkInfo = *itt;
     for (AEDeviceInfoList::iterator itt2 = sinkInfo.m_deviceInfoList.begin(); itt2 != sinkInfo.m_deviceInfoList.end(); ++itt2)
     {
-      CAEDeviceInfo devInfo = *itt2;
+      CAEDeviceInfo& devInfo = *itt2;
       if (passthrough && !devInfo.SupportsRaw())
         continue;
 
