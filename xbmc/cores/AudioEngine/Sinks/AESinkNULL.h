@@ -35,7 +35,7 @@ public:
 
   virtual bool Initialize  (CAEDeviceInfo *devicePtr, AEAudioFormat &format);
   virtual void Deinitialize();
-  virtual bool IsCompatible(CAEDeviceInfo *devicePtr, const AEAudioFormat format);
+  virtual bool IsCompatible(CAEDeviceInfo *devicePtr, const AEAudioFormat &format);
 
   virtual double       GetDelay        ();
   virtual double       GetCacheTime    () { return 0.0; }
