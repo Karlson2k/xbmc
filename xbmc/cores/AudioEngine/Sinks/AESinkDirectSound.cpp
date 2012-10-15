@@ -466,8 +466,6 @@ double CAESinkDirectSound::GetCacheTotal()
 
 void CAESinkDirectSound::EnumerateDevicesEx(AEDeviceInfoList &deviceInfoList)
 {
-  CAEDeviceInfo        deviceInfo;
-
   IMMDeviceEnumerator* pEnumerator = NULL;
   IMMDeviceCollection* pEnumDevices = NULL;
 
@@ -489,7 +487,8 @@ void CAESinkDirectSound::EnumerateDevicesEx(AEDeviceInfoList &deviceInfoList)
       if (UuidToString((*itt).lpGuid, &cszGUID) != RPC_S_OK)
         continue;  /* could not convert GUID to string - skip device */
 
-      deviceInfo.m_channels.Reset();
+      CAEDeviceInfo deviceInfo(AE_SINK_DIRECTSOUND);
+      deviceInfo.m_channelsFormats.clear();
       deviceInfo.m_dataFormats.clear();
       deviceInfo.m_sampleRates.clear();
 
@@ -500,7 +499,7 @@ void CAESinkDirectSound::EnumerateDevicesEx(AEDeviceInfoList &deviceInfoList)
       deviceInfo.m_displayNameExtra = std::string("DirectSound: ") + (*itt).name;
 
       deviceInfo.m_deviceType = AE_DEVTYPE_PCM;
-      deviceInfo.m_channels   = layoutsByChCount[2];
+      deviceInfo.m_channelsFormats.push_back(layoutsByChCount[2]);
 
       deviceInfo.m_dataFormats.push_back(AEDataFormat(AE_FMT_FLOAT));
       deviceInfo.m_dataFormats.push_back(AEDataFormat(AE_FMT_AC3));
@@ -528,12 +527,13 @@ void CAESinkDirectSound::EnumerateDevicesEx(AEDeviceInfoList &deviceInfoList)
 
   for (UINT i = 0; i < uiCount; i++)
   {
+    CAEDeviceInfo deviceInfo(AE_SINK_DIRECTSOUND);
     IMMDevice *pDevice = NULL;
     IPropertyStore *pProperty = NULL;
     PROPVARIANT varName;
     PropVariantInit(&varName);
 
-    deviceInfo.m_channels.Reset();
+    deviceInfo.m_channelsFormats.clear();
     deviceInfo.m_dataFormats.clear();
     deviceInfo.m_sampleRates.clear();
 
@@ -603,7 +603,7 @@ void CAESinkDirectSound::EnumerateDevicesEx(AEDeviceInfoList &deviceInfoList)
     if (SUCCEEDED(hr) && varName.blob.cbSize > 0)
     {
       WAVEFORMATEX* smpwfxex = (WAVEFORMATEX*)varName.blob.pBlobData;
-      deviceInfo.m_channels = layoutsByChCount[std::min(smpwfxex->nChannels, (WORD) 2)];
+      deviceInfo.m_channelsFormats.push_back(layoutsByChCount[std::min(smpwfxex->nChannels, (WORD) 2)]);
       deviceInfo.m_dataFormats.push_back(AEDataFormat(AE_FMT_FLOAT));
       deviceInfo.m_dataFormats.push_back(AEDataFormat(AE_FMT_AC3));
       deviceInfo.m_sampleRates.push_back(std::min(smpwfxex->nSamplesPerSec, (DWORD) 96000));

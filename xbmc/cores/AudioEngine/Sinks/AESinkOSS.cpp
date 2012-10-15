@@ -453,7 +453,7 @@ void CAESinkOSS::EnumerateDevicesEx(AEDeviceInfoList &list)
   {
     std::stringstream devicepath;
     std::stringstream devicename;
-    CAEDeviceInfo info;
+    CAEDeviceInfo info(AE_SINK_OSS);
     oss_card_info cardinfo;
 
     devicepath << "/dev/dsp" << i;
@@ -483,10 +483,12 @@ void CAESinkOSS::EnumerateDevicesEx(AEDeviceInfoList &list)
       if (ainfo.oformats & AFMT_S16_LE)
         info.m_dataFormats.push_back(AE_FMT_S16LE);
 #endif
+      CAEChannelInfo channelInfo;
       for (int j = 0;
         j < ainfo.max_channels && AE_CH_NULL != OSSChannelMap[j];
         ++j)
-          info.m_channels += OSSChannelMap[j];
+          channelInfo += OSSChannelMap[j];
+      info.m_channelsFormats.push_back(channelInfo);
 
       for (int *rate = OSSSampleRateList; *rate != 0; ++rate)
         if (*rate >= ainfo.min_rate && *rate <= ainfo.max_rate)

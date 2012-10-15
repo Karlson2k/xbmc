@@ -145,6 +145,15 @@ AEDeviceInfoList DeviceInfoList;
 
 DEFINE_PROPERTYKEY(PKEY_Device_FriendlyName, 0xa45c254e, 0xdf1c, 0x4efd, 0x80, 0x20, 0x67, 0xd1, 0x46, 0xa8, 0x50, 0xe0, 14);
 
+CWASAPISpecificDeviceInfo::CWASAPISpecificDeviceInfo(void)
+  :CSinkSpecificDeviceInfo()
+{
+}
+
+CWASAPISpecificDeviceInfo::~CWASAPISpecificDeviceInfo(void)
+{
+}
+
 DWORD ChLayoutToChMask(const enum AEChannel * layout, unsigned int * numberOfChannels = NULL)
 {
   if (numberOfChannels)
@@ -541,7 +550,6 @@ void CAESinkWASAPI::EnumerateDevicesEx(AEDeviceInfoList &deviceInfoList)
 {
   IMMDeviceEnumerator* pEnumerator = NULL;
   IMMDeviceCollection* pEnumDevices = NULL;
-  CAEDeviceInfo        deviceInfo;
   CAEChannelInfo       deviceChannels;
 
   WAVEFORMATEXTENSIBLE wfxex = {0};
@@ -561,12 +569,13 @@ void CAESinkWASAPI::EnumerateDevicesEx(AEDeviceInfoList &deviceInfoList)
 
   for (UINT i = 0; i < uiCount; i++)
   {
+    CAEDeviceInfo deviceInfo(AE_SINK_WASAPI);
     IMMDevice *pDevice = NULL;
     IPropertyStore *pProperty = NULL;
     PROPVARIANT varName;
     PropVariantInit(&varName);
 
-    deviceInfo.m_channels.Reset();
+    deviceInfo.m_channelsFormats.clear();
     deviceInfo.m_dataFormats.clear();
     deviceInfo.m_sampleRates.clear();
 
@@ -831,7 +840,7 @@ void CAESinkWASAPI::EnumerateDevicesEx(AEDeviceInfoList &deviceInfoList)
     deviceInfo.m_displayName      = strWinDevType.append(strFriendlyName);
     deviceInfo.m_displayNameExtra = std::string("WASAPI: ").append(strFriendlyName);
     deviceInfo.m_deviceType       = aeDeviceType;
-    deviceInfo.m_channels         = deviceChannels;
+    deviceInfo.m_channelsFormats.push_back(deviceChannels);
 
     /* Store the device info */
     deviceInfoList.push_back(deviceInfo);

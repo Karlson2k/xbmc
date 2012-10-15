@@ -65,7 +65,7 @@ static jint GetStaticIntField(JNIEnv *jenv, std::string class_name, std::string 
   return int_field;
 }
 
-CAEDeviceInfo CAESinkAUDIOTRACK::m_info;
+CAEDeviceInfo CAESinkAUDIOTRACK::m_info(AE_SINK_AUDIOTRACK);
 ////////////////////////////////////////////////////////////////////////////////////////////
 CAESinkAUDIOTRACK::CAESinkAUDIOTRACK()
   : CThread("audiotrack")
@@ -114,7 +114,7 @@ bool CAESinkAUDIOTRACK::Initialize(AEAudioFormat &format, std::string &device)
   }
   m_format.m_dataFormat = dataFormat;
 
-  m_format.m_channelLayout = m_info.m_channels;
+  m_format.m_channelLayout = m_info.m_channelsFormats[0];
   m_format.m_frameSize = format.m_channelLayout.Count() * (CAEUtil::DataFormatToBits(m_format.m_dataFormat) >> 3);
 
   m_draining = false;
@@ -236,7 +236,7 @@ void  CAESinkAUDIOTRACK::SetVolume(float volume)
 
 void CAESinkAUDIOTRACK::EnumerateDevicesEx(AEDeviceInfoList &list)
 {
-  m_info.m_channels.Reset();
+  m_info.m_channelsFormats.clear();
   m_info.m_dataFormats.clear();
   m_info.m_sampleRates.clear();
 
@@ -244,8 +244,10 @@ void CAESinkAUDIOTRACK::EnumerateDevicesEx(AEDeviceInfoList &list)
   m_info.m_deviceName = "AudioTrack";
   m_info.m_displayName = "android";
   m_info.m_displayNameExtra = "audiotrack";
-  m_info.m_channels += AE_CH_FL;
-  m_info.m_channels += AE_CH_FR;
+  CAEChannelInfo channelInfo;
+  channelInfo += AE_CH_FL;
+  channelInfo += AE_CH_FR;
+  m_info.m_channelsFormats.push_back(channelInfo);
   m_info.m_sampleRates.push_back(44100);
   m_info.m_sampleRates.push_back(48000);
   m_info.m_dataFormats.push_back(AE_FMT_S16LE);

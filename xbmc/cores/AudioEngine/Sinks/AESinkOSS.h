@@ -25,6 +25,14 @@
 
 #include "threads/CriticalSection.h"
 
+class COSSSpecificDeviceInfo : public CSinkSpecificDeviceInfo
+{
+public:
+  COSSSpecificDeviceInfo();
+  virtual ~COSSSpecificDeviceInfo();
+  virtual AESinkType GetSinkType() { return AE_SINK_WASAPI; }
+};
+
 class CAESinkOSS : public IAESink
 {
 public:

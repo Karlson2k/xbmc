@@ -31,6 +31,14 @@
 
 #include "threads/CriticalSection.h"
 
+class CALSASpecificDeviceInfo : public CSinkSpecificDeviceInfo
+{
+public:
+  CALSASpecificDeviceInfo();
+  virtual ~CALSASpecificDeviceInfo();
+  virtual AESinkType GetSinkType() { return AE_SINK_ALSA; }
+};
+
 class CAESinkALSA : public IAESink
 {
 public:
