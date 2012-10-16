@@ -29,6 +29,12 @@
 
 typedef std::pair<std::string, std::string> AEDevice;
 typedef std::vector<AEDevice> AEDeviceList;
+typedef struct _AEDeviceEx
+{
+  std::string           m_DeviceName;
+  std::string           m_DisplayName;
+  std::vector<AEDataFormat>  m_SupportedDataFormats;
+} AEDeviceEx;
 
 /* forward declarations */
 class IAEStream;
@@ -163,6 +169,14 @@ public:
    * @param passthrough True if only passthrough devices are wanted
    */
   virtual void EnumerateOutputDevices(AEDeviceList &devices, bool passthrough) = 0;
+
+  /**
+   * Enumerate the supported audio output devices with extended information
+   * @param devices The device list to append supported devices to
+   * @param passthrough True if only passthrough devices are wanted
+   * @return false if not supported, true if succeed
+   */
+  virtual bool EnumerateOutputDevicesEx(std::vector<AEDeviceEx> &devices, bool passthrough) { return false; }
 
   /**
    * Returns the default audio device
