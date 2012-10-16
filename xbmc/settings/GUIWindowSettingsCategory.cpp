@@ -2856,12 +2856,18 @@ void CGUIWindowSettingsCategory::FillInAudioDevices(CSetting* pSetting, bool Pas
   if (Passthrough)
   {
     m_DigitalAudioSinkMap.clear();
-    m_DigitalAudioSinkMap["Error - no devices found"] = "null:";
+    AEDeviceEx dev;
+    dev.m_DeviceName = "null:";
+    dev.m_DisplayName = "Error - no devices found";
+    m_DigitalAudioSinkMap[dev.m_DisplayName] = dev;
   }
   else
   {
     m_AnalogAudioSinkMap.clear();
-    m_AnalogAudioSinkMap["Error - no devices found"] = "null:";
+    AEDeviceEx dev;
+    dev.m_DeviceName = "null:";
+    dev.m_DisplayName = "Error - no devices found";
+    m_AnalogAudioSinkMap[dev.m_DisplayName] = dev;
   }
 
   int numberSinks = 0;
