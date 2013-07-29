@@ -200,5 +200,11 @@ public:
    * @returns true if the AudioEngine is capable of RAW output
    */
   virtual bool SupportsRaw() { return false; }
+
+  /**
+   * Returns true if AudioEngine supports specified quality level
+   * @return true if specified quality level is supported, otherwise false
+   */
+  virtual bool SupportsQualityLevel(enum AEQuality level) { return false; }
 };
 
