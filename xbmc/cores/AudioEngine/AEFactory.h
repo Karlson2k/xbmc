@@ -53,6 +53,12 @@ public:
   static void VerifyOutputDevice(std::string &device, bool passthrough);
   static std::string GetDefaultDevice(bool passthrough);
   static bool SupportsRaw();
+
+  /**
+   * Returns true if current AudioEngine supports at lest two basic quality levels
+   * @return true if quality setting is supported, otherwise false
+   */
+  static bool SupportsQualitySetting(void);
   static void SetMute(const bool enabled);
   static bool IsMuted();
   static float GetVolume();

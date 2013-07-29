@@ -243,6 +243,20 @@ bool CAEFactory::SupportsRaw()
   return false;
 }
 
+/**
+  * Returns true if current AudioEngine supports at lest two basic quality levels
+  * @return true if quality setting is supported, otherwise false
+  */
+bool CAEFactory::SupportsQualitySetting(void) 
+{
+  if (!AE)
+    return false;
+
+  return ((AE->SupportsQualityLevel(AE_QUALITY_LOW)? 1 : 0) + 
+          (AE->SupportsQualityLevel(AE_QUALITY_NORMAL)? 1 : 0) +
+          (AE->SupportsQualityLevel(AE_QUALITY_HIGH)? 1 : 0)) >= 2; 
+}
+  
 void CAEFactory::SetMute(const bool enabled)
 {
   if(AE)
