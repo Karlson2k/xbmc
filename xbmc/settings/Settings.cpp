@@ -359,6 +359,7 @@ void CSettings::Uninitialize()
   // unregister setting option fillers
   m_settingsManager->UnregisterSettingOptionsFiller("audiocdactions");
   m_settingsManager->UnregisterSettingOptionsFiller("audiocdencoders");
+  m_settingsManager->UnregisterSettingOptionsFiller("ae_quality_levels");
   m_settingsManager->UnregisterSettingOptionsFiller("audiodevices");
   m_settingsManager->UnregisterSettingOptionsFiller("audiodevicespassthrough");
   m_settingsManager->UnregisterSettingOptionsFiller("audiooutputmodes");
@@ -663,6 +664,7 @@ void CSettings::InitializeOptionFillers()
   m_settingsManager->RegisterSettingOptionsFiller("audiocdactions", MEDIA_DETECT::CAutorun::SettingOptionAudioCdActionsFiller);
   m_settingsManager->RegisterSettingOptionsFiller("audiocdencoders", MEDIA_DETECT::CAutorun::SettingOptionAudioCdEncodersFiller);
 #endif
+  m_settingsManager->RegisterSettingOptionsFiller("ae_quality_levels", CAEFactory::SettingOptionsAudioQualityLevelsFiller);
   m_settingsManager->RegisterSettingOptionsFiller("audiodevices", CAEFactory::SettingOptionsAudioDevicesFiller);
   m_settingsManager->RegisterSettingOptionsFiller("audiodevicespassthrough", CAEFactory::SettingOptionsAudioDevicesPassthroughFiller);
   m_settingsManager->RegisterSettingOptionsFiller("audiooutputmodes", CAEFactory::SettingOptionsAudioOutputModesFiller);
@@ -757,6 +759,9 @@ void CSettings::InitializeConditions()
     m_settingsManager->AddCondition("hasdxva2");
 #endif
 
+  if(CAEFactory::SupportsQualitySetting())
+    m_settingsManager->AddCondition("has_ae_quality_levels");
+
   if (g_application.IsStandAlone())
     m_settingsManager->AddCondition("isstandalone");
 
@@ -841,6 +846,7 @@ void CSettings::InitializeISettingCallbacks()
 
   settingSet.clear();
   settingSet.insert("audiooutput.channels");
+  settingSet.insert("audiooutput.processquality");
   settingSet.insert("audiooutput.guisoundmode");
   settingSet.insert("lookandfeel.skin");
   settingSet.insert("lookandfeel.skinsettings");

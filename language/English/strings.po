@@ -12146,8 +12146,49 @@ msgctxt "#34123"
 msgid "Never"
 msgstr ""
 
-#empty strings from id 34124 to 34200
-#34124-34200 reserved for future use
+#: system/settings/settings.xml
+msgctxt "#34124"
+msgid "Audio processing quality"
+msgstr ""
+
+#. Audio processing quality
+#: xbmc/core/AudioEngine/AEFactory.cpp
+msgctxt "#34125"
+msgid "Lowest and fastest"
+msgstr ""
+
+#. Audio processing quality
+#: xbmc/core/AudioEngine/AEFactory.cpp
+msgctxt "#34126"
+msgid "Low"
+msgstr ""
+
+#. Audio processing quality
+#: xbmc/core/AudioEngine/AEFactory.cpp
+msgctxt "#34127"
+msgid "Standard"
+msgstr ""
+
+#. Audio processing quality
+#: xbmc/core/AudioEngine/AEFactory.cpp
+msgctxt "#34128"
+msgid "Better"
+msgstr ""
+
+#. Audio processing quality
+#: xbmc/core/AudioEngine/AEFactory.cpp
+msgctxt "#34129"
+msgid "Best"
+msgstr ""
+
+#. Audio processing quality
+#: xbmc/core/AudioEngine/AEFactory.cpp
+msgctxt "#34130"
+msgid "Paranoid"
+msgstr ""
+
+#empty strings from id 34131 to 34200
+#34131-34200 reserved for future use
 
 #: xbmc\PlayListPlayer.cpp
 msgctxt "#34201"
@@ -14132,7 +14173,15 @@ msgctxt "#36420"
 msgid "No info available yet."
 msgstr ""
 
-#empty strings from id 36421 to 36999
+#empty strings from id 36421 to 36499
+#end reservation
+
+#: system/settings/settings.xml
+msgctxt "#36500"
+msgid "Resampling and other sound processing quality. Low quality is fast, higher quality will consume more CPU."
+msgstr ""
+
+#empty strings from id 36501 to 36999
 #end reservation
 
 #: xbmc/cores/dvdplayer/DVDInputStreams/DVDInputStreamNavigator.cpp
