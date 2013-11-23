@@ -139,6 +139,13 @@ CArchive& CArchive::operator<<(const std::wstring& wstr)
   return streamout(wstr.data(), wstr.size() * sizeof(wchar_t));
 }
 
+CArchive& CArchive::operator<<(const std::u32string& u32str)
+{
+  *this << u32str.size();
+
+  return streamout(u32str.data(), u32str.size() * sizeof(char32_t));
+}
+
 CArchive& CArchive::operator<<(const SYSTEMTIME& time)
 {
   return streamout(&time, sizeof(SYSTEMTIME));
@@ -318,6 +325,19 @@ CArchive& CArchive::operator>>(std::wstring& wstr)
   wchar_t * const p = new wchar_t[iLength];
   streamin(p, iLength * sizeof(wchar_t));
   wstr.assign(p, iLength);
+  delete[] p;
+
+  return *this;
+}
+
+CArchive& CArchive::operator>>(std::u32string& u32str)
+{
+  size_t length = 0;
+  *this >> length;
+
+  char32_t * const p = new char32_t[length];
+  streamin(p, length * sizeof(char32_t));
+  u32str.assign(p, length);
   delete[] p;
 
   return *this;

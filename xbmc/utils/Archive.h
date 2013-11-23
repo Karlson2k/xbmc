@@ -23,6 +23,7 @@
 #include <string>
 #include <vector>
 #include "PlatformDefs.h" // for SYSTEMTIME
+#include "utils/uXstrings.h"
 
 namespace XFILE
 {
@@ -70,6 +71,7 @@ public:
   CArchive& operator<<(char c);
   CArchive& operator<<(const std::string &str);
   CArchive& operator<<(const std::wstring& wstr);
+  CArchive& operator<<(const std::u32string& u32str);
   CArchive& operator<<(const SYSTEMTIME& time);
   CArchive& operator<<(IArchivable& obj);
   CArchive& operator<<(const CVariant& variant);
@@ -91,6 +93,7 @@ public:
   CArchive& operator>>(char& c);
   CArchive& operator>>(std::string &str);
   CArchive& operator>>(std::wstring& wstr);
+  CArchive& operator>>(std::u32string& u32str);
   CArchive& operator>>(SYSTEMTIME& time);
   CArchive& operator>>(IArchivable& obj);
   CArchive& operator>>(CVariant& variant);
