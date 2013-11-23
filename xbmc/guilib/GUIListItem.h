@@ -29,6 +29,7 @@
  */
 
 #include "utils/StdString.h"
+#include "utils/uXstrings.h"
 
 #include <map>
 #include <string>
@@ -129,8 +130,8 @@ public:
   bool HasArt(const std::string &type) const;
 
   void SetSortLabel(const CStdString &label);
-  void SetSortLabel(const CStdStringW &label);
-  const CStdStringW &GetSortLabel() const;
+  void SetSortLabel(const std::u32string& label);
+  const std::u32string& GetSortLabel() const;
 
   void Select(bool bOnOff);
   bool IsSelected() const;
@@ -191,7 +192,7 @@ protected:
   typedef std::map<CStdString, CVariant, icompare> PropertyMap;
   PropertyMap m_mapProperties;
 private:
-  CStdStringW m_sortLabel;    // text for sorting. Need to be UTF16 for proper sorting
+  std::u32string m_sortLabel;    // text for sorting. Need to be UTF32 for proper sorting
   CStdString m_strLabel;      // text of column1
 
   ArtMap m_art;

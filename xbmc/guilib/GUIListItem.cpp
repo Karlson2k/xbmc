@@ -101,16 +101,16 @@ const CStdString& CGUIListItem::GetLabel2() const
 
 void CGUIListItem::SetSortLabel(const CStdString &label)
 {
-  g_charsetConverter.utf8ToW(label, m_sortLabel, false);
+  g_charsetConverter.utf8ToUtf32(label, m_sortLabel, false);
   // no need to invalidate - this is never shown in the UI
 }
 
-void CGUIListItem::SetSortLabel(const CStdStringW &label)
+void CGUIListItem::SetSortLabel(const std::u32string& label)
 {
   m_sortLabel = label;
 }
 
-const CStdStringW& CGUIListItem::GetSortLabel() const
+const std::u32string& CGUIListItem::GetSortLabel() const
 {
   return m_sortLabel;
 }
