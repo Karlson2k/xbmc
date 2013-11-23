@@ -134,6 +134,7 @@ void CGUILabelControl::UpdateInfo(const CGUIListItem *item)
   bool changed = false;
   if (m_startHighlight < m_endHighlight || m_startSelection < m_endSelection || m_bShowCursor)
   {
+    // TODO: fix wrong wstring == utf16
     CStdStringW utf16;
     g_charsetConverter.utf8ToW(label, utf16);
     vecText text; text.reserve(utf16.size()+1);
