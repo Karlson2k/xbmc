@@ -676,8 +676,8 @@ void SortUtils::Sort(SortBy sortBy, SortOrder sortOrder, SortAttribute attribute
             (*item)->insert(pair<Field, CVariant>(*field, CVariant::ConstNullVariant));
         }
 
-        CStdStringW sortLabel;
-        g_charsetConverter.utf8ToW(preparator(attributes, **item), sortLabel, false);
+        std::u32string sortLabel;
+        g_charsetConverter.utf8ToUtf32(preparator(attributes, **item), sortLabel, false);
         (*item)->insert(pair<Field, CVariant>(FieldSort, CVariant(sortLabel)));
       }
 
