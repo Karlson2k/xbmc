@@ -156,7 +156,7 @@ CUtf32Utils::digitsMap CUtf32Utils::digitsMapFiller(void)
   digitsMap m;
 
   // source: DerivedNumericValues-6.3.0.txt
-  // see ftp://ftp.unicode.org/Public/UCD/latest/ucd/extracted/DerivedNumericValues.txt
+  // see ftp://ftp.unicode.org/Public/6.3.0/ucd/extracted/DerivedNumericValues.txt
 
   m.insert(digitsMapElement( 0x0F33 , -1.0/2.0 )); // No       TIBETAN DIGIT HALF ZERO
 
