@@ -87,7 +87,6 @@ CUtf32Utils::digitsMap CUtf32Utils::digitsMapFiller(void)
 
   // source: $sourceFilename
   // see $digitsFileUrl
-  
 _EOF_
 
 echo 'Generating .cpp data file...'
