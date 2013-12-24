@@ -41,8 +41,8 @@ do
   xcodestart=${codes%..*}
   xcodeend=${codes#*..}
   printf '/%s\.\.%s/ {\nh; ' $xcodestart $xcodeend
-  codestart=`echo "ibase=16; $xcodestart"|bc` || return 1
-  codeend=`echo "ibase=16; $xcodeend"|bc` || return 1
+  codestart=`printf "%i" 0x$xcodestart` || return 1
+  codeend=`printf "%i" 0x$xcodeend` || return 1
   for i in $(seq $codestart $codeend)
   do
      [ "$i" != "$codestart" ] && printf "G; "
@@ -70,7 +70,7 @@ D
 }
 _EOF_
 
-echo 'Generating sed code series replacement script...'
+echo 'Generating code series replacement script...'
 gen_expand_sed $codesToExpand >> $sedScript || exit 1
 
 sourceFilename=$(head -n 1 $digitsFile)
