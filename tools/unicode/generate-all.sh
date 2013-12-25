@@ -54,7 +54,6 @@ cat << _EOF_ > "$outputFilename" || exit 1
  */
  
 #include "utils/CharsetConverter.h"
- 
 _EOF_
 
 echo 'Starting digits data processing...'
@@ -62,6 +61,7 @@ if ! $scriptPath/generate-digitsdata.sh $outputFilename; then
   echo 'Error!'
   exit 1
 fi
+exit 0
 
 echo 'Starting folding data processing...'
 if ! $scriptPath/generate-folddata.sh $outputFilename; then
