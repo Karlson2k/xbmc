@@ -21,7 +21,7 @@
 
 cppdataFile="$1"
 sourceFileUrl='ftp://ftp.unicode.org/Public/6.3.0/ucd/CaseFolding.txt'
-codeLineTemplateS='  m.insert(charcharMapElement(0x\1, 0x\2); // '
+codeLineTemplateS='  m.insert(charcharMapElement(0x\1, 0x\2)); // '
 codeLineTemplateF3='    { 0x\1, { { 0x\2, 0x\3, 0x\4 }, 3 } }, //'
 codeLineTemplateF2='    { 0x\1, { { 0x\2, 0x\3 }, 2 } }, //'
 localFile='CaseFolding.txt'
