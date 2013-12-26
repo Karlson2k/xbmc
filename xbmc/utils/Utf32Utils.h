@@ -41,11 +41,33 @@ public:
    */
   static int NaturalCompare(const std::u32string& left, const std::u32string right);
 
+  static std::u32string FoldCase(const std::u32string& str);
+  static std::u32string FoldCase(const char32_t chr);
+
 private:
   typedef std::map<const char32_t, const double> digitsMap;
   typedef digitsMap::value_type digitsMapElement;
 
   static const digitsMap m_digitsMap;
   static digitsMap digitsMapFiller(void);
+
+  typedef std::map<const char32_t, const char32_t> charcharMap;
+  typedef charcharMap::value_type charcharMapElement;
+
+  static const charcharMap m_foldSimpleCharsMap;
+  static charcharMap foldSimpleCharsMapFiller(void);
+
+  struct strWithLen
+  {
+     const char32_t str[3];
+     const size_t len;
+  };
+  typedef std::map<const char32_t, const strWithLen> charstrMap;
+  typedef charstrMap::value_type charstrMapElement;
+
+  static const charstrMap m_foldFullCharsMap;
+  static charstrMap foldFullCharsMapFiller(void);
+
+  static bool m_useTurkicCaseFolding;
 };
 
