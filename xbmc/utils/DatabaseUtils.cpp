@@ -27,6 +27,14 @@
 #include "utils/Variant.h"
 #include "utils/StringUtils.h"
 #include "video/VideoDatabase.h"
+#include "utils/CharsetConverter.h"
+
+
+void DatabaseResult::SetSortLabel(const std::string sortLabel)
+{
+  if (!g_charsetConverter.utf8ToUtf32(sortLabel, m_SortLabel, true))
+    CLog::Log(LOGERROR, "%s: Can't convert \"%s\" to UTF-32", __FUNCTION__, sortLabel.c_str());
+}
 
 std::string DatabaseUtils::MediaTypeToString(MediaType mediaType)
 {

@@ -24,6 +24,7 @@
 #include <set>
 #include <string>
 #include <vector>
+#include "utils/uXstrings.h"
 
 class CVariant;
 
@@ -37,7 +38,7 @@ typedef enum {
   // special fields used during sorting
   FieldUnknown = -1,
   FieldNone = 0,
-  FieldSort,        // used to store the string to use for sorting
+  /* FieldSort, - use special member instead */       // used to store the string to use for sorting
   FieldSortSpecial, // whether the item needs special handling (0 = no, 1 = sort on top, 2 = sort on bottom)
   FieldLabel,
   FieldFolder,
@@ -149,7 +150,22 @@ typedef enum {
   DatabaseQueryPartOrderBy,
 } DatabaseQueryPart;
 
-typedef std::map<Field, CVariant> DatabaseResult;
+
+class DatabaseResult : public std::map<Field, CVariant>
+{
+  inline void SetSortLabel(const std::u32string sortLabel)
+  {
+    m_SortLabel = sortLabel;
+  }
+  void SetSortLabel(const std::string sortLabel);
+  
+  inline std::u32string GetSortLable(void)
+  {
+    return m_SortLabel;
+  }
+private:
+  std::u32string m_SortLabel;
+};
 typedef std::vector<DatabaseResult> DatabaseResults;
 
 class DatabaseUtils
