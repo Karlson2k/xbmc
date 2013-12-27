@@ -52,7 +52,9 @@ private:
   typedef charcharMap::value_type charcharMapElement;
 
   static const charcharMap m_foldCommonCharsMap;
+  static charcharMap foldCommonCharsMapFiller(void); // implemented in Utf32Utils-data.cpp
   static const charcharMap m_foldSimpleCharsMap;
+  static charcharMap foldSimpleCharsMapFiller(void); // implemented in Utf32Utils-data.cpp
 
   struct strWithLen
   {
@@ -63,5 +65,6 @@ private:
   typedef charstrMap::value_type charstrMapElement;
 
   static const charstrMap m_foldFullCharsMap;
+  static charstrMap foldFullCharsMapFiller(void);
 };
 
