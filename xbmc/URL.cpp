@@ -128,7 +128,7 @@ void CURL::Parse(const CStdString& strURL1)
         if (!(s.st_mode & S_IFDIR))
 #endif
         {
-          Encode(archiveName);
+          EncodeInplace(archiveName);
           if (is_apk)
           {
             CURL c("apk://" + archiveName + "/" + strURL.substr(iPos + 1));
