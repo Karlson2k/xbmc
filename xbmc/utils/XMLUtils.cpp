@@ -237,7 +237,7 @@ bool XMLUtils::GetPath(const TiXmlNode* pRootNode, const char* strTag, CStdStrin
   {
     strStringValue = pNode->Value();
     if (encoded && strcasecmp(encoded,"yes") == 0)
-      CURL::Decode(strStringValue);
+      CURL::DecodeInplace(strStringValue);
     return true;
   }
   strStringValue.clear();

@@ -335,12 +335,12 @@ void CURL::Parse(const CStdString& strURL1)
   /* decode urlencoding on this stuff */
   if(URIUtils::ProtocolHasEncodedHostname(m_strProtocol))
   {
-    Decode(m_strHostName);
+    DecodeInplace(m_strHostName);
     SetHostName(m_strHostName);
   }
 
-  Decode(m_strUserName);
-  Decode(m_strPassword);
+  DecodeInplace(m_strUserName);
+  DecodeInplace(m_strPassword);
 }
 
 void CURL::SetFileName(const CStdString& strFileName)
@@ -706,11 +706,11 @@ bool CURL::IsFullPath(const CStdString &url)
   return false;
 }
 
-void CURL::Decode(CStdString& strURLData)
+std::string CURL::Decode(const std::string& strURLData)
 //modified to be more accomodating - if a non hex value follows a % take the characters directly and don't raise an error.
 // However % characters should really be escaped like any other non safe character (www.rfc-editor.org/rfc/rfc1738.txt)
 {
-  CStdString strResult;
+  std::string strResult;
 
   /* result will always be less than source */
   strResult.reserve( strURLData.length() );
@@ -740,7 +740,8 @@ void CURL::Decode(CStdString& strURLData)
     }
     else strResult += kar;
   }
-  strURLData = strResult;
+  
+  return strResult;
 }
 
 std::string CURL::Encode(const std::string& strURLData)
@@ -768,11 +769,9 @@ std::string CURL::Encode(const std::string& strURLData)
   return strResult;
 }
 
-std::string CURL::Decode(const std::string& strURLData)
+void CURL::DecodeInplace(std::string& strURLData)
 {
-  CStdString url = strURLData;
-  Decode(url);
-  return url;
+  strURLData = Decode(strURLData);
 }
 
 void CURL::EncodeInplace(std::string& strURLData)

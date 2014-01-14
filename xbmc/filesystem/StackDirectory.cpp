@@ -93,8 +93,8 @@ namespace XFILE
       // Check if source path uses URL encoding
       if (URIUtils::ProtocolHasEncodedFilename(CURL(strCommonDir).GetProtocol()))
       {
-        CURL::Decode(File1);
-        CURL::Decode(File2);
+        CURL::DecodeInplace(File1);
+        CURL::DecodeInplace(File2);
       }
 
       std::vector<CRegExp>::iterator itRegExp = RegExps.begin();
