@@ -1120,13 +1120,13 @@ void URIUtils::CreateArchivePath(CStdString& strUrlPath,
   if( !strPwd.empty() )
   {
     strBuffer = strPwd;
-    CURL::Encode(strBuffer);
+    CURL::EncodeInplace(strBuffer);
     strUrlPath += strBuffer;
     strUrlPath += "@";
   }
 
   strBuffer = strArchivePath;
-  CURL::Encode(strBuffer);
+  CURL::EncodeInplace(strBuffer);
 
   strUrlPath += strBuffer;
 
@@ -1139,7 +1139,7 @@ void URIUtils::CreateArchivePath(CStdString& strUrlPath,
 
 #if 0 // options are not used
   strBuffer = strCachePath;
-  CURL::Encode(strBuffer);
+  CURL::EncodeInplace(strBuffer);
 
   strUrlPath += "?cache=";
   strUrlPath += strBuffer;

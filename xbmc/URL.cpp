@@ -40,7 +40,7 @@ using namespace ADDON;
 CStdString URLEncodeInline(const CStdString& strData)
 {
   CStdString buffer = strData;
-  CURL::Encode(buffer);
+  CURL::EncodeInplace(buffer);
   return buffer;
 }
 
@@ -743,9 +743,9 @@ void CURL::Decode(CStdString& strURLData)
   strURLData = strResult;
 }
 
-void CURL::Encode(CStdString& strURLData)
+std::string CURL::Encode(const std::string& strURLData)
 {
-  CStdString strResult;
+  std::string strResult;
 
   /* wonder what a good value is here is, depends on how often it occurs */
   strResult.reserve( strURLData.length() * 2 );
@@ -764,7 +764,8 @@ void CURL::Encode(CStdString& strURLData)
       strResult += strTmp;
     }
   }
-  strURLData = strResult;
+
+  return strResult;
 }
 
 std::string CURL::Decode(const std::string& strURLData)
@@ -774,11 +775,9 @@ std::string CURL::Decode(const std::string& strURLData)
   return url;
 }
 
-std::string CURL::Encode(const std::string& strURLData)
+void CURL::EncodeInplace(std::string& strURLData)
 {
-  CStdString url = strURLData;
-  Encode(url);
-  return url;
+  strURLData = Encode(strURLData);
 }
 
 CStdString CURL::TranslateProtocol(const CStdString& prot)

@@ -333,7 +333,7 @@ CUPnPDirectory::GetDirectory(const CStdString& strPath, CFileItemList &items)
             else
                 id = (const char*) (*entry)->m_ReferenceID;
 
-            CURL::Encode(id);
+            CURL::EncodeInplace(id);
             URIUtils::AddSlashAtEnd(id);
             pItem->SetPath(CStdString((const char*) "upnp://" + uuid + "/" + id.c_str()));
 
