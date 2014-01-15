@@ -72,9 +72,8 @@ public:
   static bool IsFileOnly(const CStdString &url); ///< return true if there are no directories in the url.
   static bool IsFullPath(const CStdString &url); ///< return true if the url includes the full path
   static void DecodeInplace(std::string& strURLData);
-  static void EncodeInplace(std::string& strURLData);
   static std::string Decode(const std::string& strURLData);
-  static std::string Encode(const std::string& strURLData);
+  static std::string EncodeTmp(const std::string& strURLData);
   static CStdString TranslateProtocol(const CStdString& prot);
 
   void GetOptions(std::map<CStdString, CStdString> &options) const;

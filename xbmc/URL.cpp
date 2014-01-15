@@ -40,7 +40,7 @@ using namespace ADDON;
 CStdString URLEncodeInline(const CStdString& strData)
 {
   CStdString buffer = strData;
-  CURL::EncodeInplace(buffer);
+  buffer = CURL::EncodeTmp(buffer);
   return buffer;
 }
 
@@ -128,7 +128,7 @@ void CURL::Parse(const CStdString& strURL1)
         if (!(s.st_mode & S_IFDIR))
 #endif
         {
-          EncodeInplace(archiveName);
+          archiveName = EncodeTmp(archiveName);
           if (is_apk)
           {
             CURL c("apk://" + archiveName + "/" + strURL.substr(iPos + 1));
@@ -744,7 +744,7 @@ std::string CURL::Decode(const std::string& strURLData)
   return strResult;
 }
 
-std::string CURL::Encode(const std::string& strURLData)
+std::string CURL::EncodeTmp(const std::string& strURLData)
 {
   std::string strResult;
 
@@ -772,11 +772,6 @@ std::string CURL::Encode(const std::string& strURLData)
 void CURL::DecodeInplace(std::string& strURLData)
 {
   strURLData = Decode(strURLData);
-}
-
-void CURL::EncodeInplace(std::string& strURLData)
-{
-  strURLData = Encode(strURLData);
 }
 
 CStdString CURL::TranslateProtocol(const CStdString& prot)

@@ -399,7 +399,7 @@ std::string URLEncodePath(const std::string& strPath)
 {
   vector<string> segments = StringUtils::Split(strPath, "/");
   for (vector<string>::iterator i = segments.begin(); i != segments.end(); ++i)
-    *i = CURL::Encode(*i);
+    *i = CURL::EncodeTmp(*i);
 
   return StringUtils::Join(segments, "/");
 }
@@ -1120,13 +1120,13 @@ void URIUtils::CreateArchivePath(CStdString& strUrlPath,
   if( !strPwd.empty() )
   {
     strBuffer = strPwd;
-    CURL::EncodeInplace(strBuffer);
+    strBuffer = CURL::EncodeTmp(strBuffer);
     strUrlPath += strBuffer;
     strUrlPath += "@";
   }
 
   strBuffer = strArchivePath;
-  CURL::EncodeInplace(strBuffer);
+  strBuffer = CURL::EncodeTmp(strBuffer);
 
   strUrlPath += strBuffer;
 
@@ -1139,7 +1139,7 @@ void URIUtils::CreateArchivePath(CStdString& strUrlPath,
 
 #if 0 // options are not used
   strBuffer = strCachePath;
-  CURL::EncodeInplace(strBuffer);
+  strBuffer = CURL::EncodeTmp(strBuffer);
 
   strUrlPath += "?cache=";
   strUrlPath += strBuffer;

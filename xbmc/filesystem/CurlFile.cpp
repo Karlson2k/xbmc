@@ -690,7 +690,7 @@ void CCurlFile::ParseAndCorrectUrl(CURL &url2)
         filename += "/";
 
       partial = *it;
-      CURL::EncodeInplace(partial);
+      partial = CURL::EncodeTmp(partial);
       filename += partial;
     }
 

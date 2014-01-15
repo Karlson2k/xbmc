@@ -265,7 +265,7 @@ bool CGUIDialogAddonSettings::ShowVirtualKeyboard(int iControl)
             else
               ((CGUIButtonControl*) control)->SetLabel2(value);
             if (bEncoded)
-              CURL::EncodeInplace(value);
+              value = CURL::EncodeTmp(value);
           }
         }
         else if (strcmp(type, "number") == 0 && CGUIDialogNumeric::ShowAndGetNumber(value, label))

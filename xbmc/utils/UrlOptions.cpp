@@ -48,9 +48,9 @@ std::string CUrlOptions::GetOptionsString(bool withLeadingSeperator /* = false *
     if (opt != m_options.begin())
       options += "&";
 
-    options += CURL::Encode(opt->first);
+    options += CURL::EncodeTmp(opt->first);
     if (!opt->second.empty())
-      options += "=" + CURL::Encode(opt->second.asString());
+      options += "=" + CURL::EncodeTmp(opt->second.asString());
   }
 
   if (withLeadingSeperator && !options.empty())

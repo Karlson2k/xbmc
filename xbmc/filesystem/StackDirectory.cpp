@@ -128,7 +128,7 @@ namespace XFILE
                   strStackTitle = Title1 + Ignore1 + Extension1;
                   // Check if source path uses URL encoding
                   if (URIUtils::ProtocolHasEncodedFilename(CURL(strCommonDir).GetProtocol()))
-                    CURL::EncodeInplace(strStackTitle);
+                    strStackTitle = CURL::EncodeTmp(strStackTitle);
 
                   itRegExp = RegExps.end();
                   break;
