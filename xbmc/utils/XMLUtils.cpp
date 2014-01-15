@@ -145,7 +145,7 @@ bool XMLUtils::GetString(const TiXmlNode* pRootNode, const char* strTag, std::st
   {
     strStringValue = pNode->ValueStr();
     if (encoded && strcasecmp(encoded,"yes") == 0)
-      strStringValue = CURL::Decode(strStringValue);
+      strStringValue = CURL::DecodeTmp(strStringValue);
     return true;
   }
   strStringValue.clear();
@@ -237,7 +237,7 @@ bool XMLUtils::GetPath(const TiXmlNode* pRootNode, const char* strTag, CStdStrin
   {
     strStringValue = pNode->Value();
     if (encoded && strcasecmp(encoded,"yes") == 0)
-      CURL::DecodeInplace(strStringValue);
+      strStringValue = CURL::DecodeTmp(strStringValue);
     return true;
   }
   strStringValue.clear();

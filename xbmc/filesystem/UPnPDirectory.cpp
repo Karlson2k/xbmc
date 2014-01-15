@@ -152,7 +152,7 @@ bool CUPnPDirectory::GetResource(const CURL& path, CFileItem &item)
     CStdString uuid   = path.GetHostName();
     CStdString object = path.GetFileName();
     StringUtils::TrimRight(object, "/");
-    CURL::DecodeInplace(object);
+    object = CURL::DecodeTmp(object);
 
     PLT_DeviceDataReference device;
     if(!FindDeviceWait(upnp, uuid.c_str(), device)) {
@@ -226,7 +226,7 @@ CUPnPDirectory::GetDirectory(const CStdString& strPath, CFileItemList &items)
         object_id.TrimRight("/");
         if (object_id.GetLength()) {
             CStdString tmp = (char*) object_id;
-            CURL::DecodeInplace(tmp);
+            tmp = CURL::DecodeTmp(tmp);
             object_id = tmp;
         }
 

@@ -383,7 +383,7 @@ static CStdString Prettify(const CStdString& strDirectory)
 {
   CURL url(strDirectory);
   CStdString strStrippedPath = url.GetWithoutUserDetails();
-  CURL::DecodeInplace(strStrippedPath);
+  strStrippedPath = CURL::DecodeTmp(strStrippedPath);
 
   return strStrippedPath;
 }

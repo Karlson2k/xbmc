@@ -141,9 +141,9 @@ void CUrlOptions::AddOptions(const std::string &options)
     string key, value;
 
     size_t pos = option->find('=');
-    key = CURL::Decode(option->substr(0, pos));
+    key = CURL::DecodeTmp(option->substr(0, pos));
     if (pos != string::npos)
-      value = CURL::Decode(option->substr(pos + 1));
+      value = CURL::DecodeTmp(option->substr(pos + 1));
 
     // the key cannot be empty
     if (!key.empty())

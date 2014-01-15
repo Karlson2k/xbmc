@@ -251,7 +251,7 @@ bool CGUIDialogAddonSettings::ShowVirtualKeyboard(int iControl)
             bEncoded = (strstr(option, "urlencoded") != NULL);
           }
           if (bEncoded)
-            CURL::DecodeInplace(value);
+            value = CURL::DecodeTmp(value);
 
           if (CGUIKeyboardFactory::ShowAndGetInput(value, label, true, bHidden))
           {
@@ -708,7 +708,7 @@ void CGUIDialogAddonSettings::CreateControls()
           // get any option to test for hidden
           const char *option = setting->Attribute("option");
           if (option && (strstr(option, "urlencoded")))
-            CURL::DecodeInplace(value);
+            value = CURL::DecodeTmp(value);
           if (option && (strstr(option, "hidden")))
           {
             CStdString hiddenText;

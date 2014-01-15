@@ -408,7 +408,7 @@ std::string URLDecodePath(const std::string& strPath)
 {
   vector<string> segments = StringUtils::Split(strPath, "/");
   for (vector<string>::iterator i = segments.begin(); i != segments.end(); ++i)
-    *i = CURL::Decode(*i);
+    *i = CURL::DecodeTmp(*i);
 
   return StringUtils::Join(segments, "/");
 }
