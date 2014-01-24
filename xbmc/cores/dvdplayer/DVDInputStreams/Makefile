@@ -11,6 +11,7 @@ SRCS=	DVDFactoryInputStream.cpp \
 	DVDInputStreamMemory.cpp \
 	DVDInputStreamNavigator.cpp \
 	DVDInputStreamRTMP.cpp \
+	DVDInputStreamHLS.cpp \
 	DVDInputStreamPVRManager.cpp \
 	DVDInputStreamStack.cpp \
 	DVDInputStreamTV.cpp \

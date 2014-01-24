@@ -1,6 +1,5 @@
-#pragma once
 /*
- *      Copyright (C) 2005-2013 Team XBMC
+ *      Copyright (C) 2005-2014 Team XBMC
  *      http://xbmc.org
  *
  *  This Program is free software; you can redistribute it and/or modify
@@ -18,23 +17,15 @@
  *  <http://www.gnu.org/licenses/>.
  *
  */
-#include "PlayList.h"
 
-namespace PLAYLIST
+#include "DVDInputStreamHLS.h"
+#include "xbmc/playlists/PlayListM3U.h"
+
+CDVDInputStreamHLS::CDVDInputStreamHLS() : CDVDInputStreamFFmpeg() {}
+
+bool CDVDInputStreamHLS::Open(const char* strFile, const std::string& content)
 {
-class CPlayListM3U :
-      public CPlayList
-{
-public:
-  CPlayListM3U(void);
-  virtual ~CPlayListM3U(void);
-  virtual bool Load(const CStdString& strFileName);
-  virtual void Save(const CStdString& strFileName) const;
-
-  static CStdString GetBestBandwidthStream(const CStdString &strFileName);
-
-protected:
-
-  static std::map< CStdString, CStdString > ParseStreamLine(const CStdString &streamLine);
-};
+  // determine the most appropriate stream
+  const char* path = PLAYLIST::CPlayListM3U::GetBestBandwidthStream(strFile);
+  return CDVDInputStreamFFmpeg::Open(path, content);
 }

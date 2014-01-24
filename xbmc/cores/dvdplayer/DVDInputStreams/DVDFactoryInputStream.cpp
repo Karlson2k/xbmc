@@ -28,6 +28,7 @@
 #include "DVDInputStreamPVRManager.h"
 #include "DVDInputStreamTV.h"
 #include "DVDInputStreamRTMP.h"
+#include "DVDInputStreamHLS.h"
 #ifdef HAVE_LIBBLURAY
 #include "DVDInputStreamBluray.h"
 #endif
@@ -88,9 +89,10 @@ CDVDInputStream* CDVDFactoryInputStream::CreateInputStream(IDVDPlayer* pPlayer, 
        || file.substr(0, 6) == "tcp://"
        || file.substr(0, 6) == "mms://"
        || file.substr(0, 7) == "mmst://"
-       || file.substr(0, 7) == "mmsh://"
-       || (item.IsInternetStream() && item.IsType(".m3u8")))
+       || file.substr(0, 7) == "mmsh://")
     return new CDVDInputStreamFFmpeg();
+  else if (item.IsInternetStream() && item.IsType(".m3u8"))
+    return new CDVDInputStreamHLS();
   else if(file.substr(0, 8) == "sling://"
        || file.substr(0, 7) == "myth://"
        || file.substr(0, 8) == "cmyth://"

@@ -28,6 +28,7 @@
 #include "utils/log.h"
 #include "utils/URIUtils.h"
 #include "settings/AdvancedSettings.h"
+#include "settings/Settings.h"
 #include "music/tags/MusicInfoTag.h"
 
 using namespace PLAYLIST;
@@ -183,7 +184,7 @@ void CPlayListM3U::Save(const CStdString& strFileName) const
   file.Close();
 }
 
-CStdString CPlayListM3U::GetBestBandwidthStream(const CStdString &strFileName, size_t bandwidth)
+CStdString CPlayListM3U::GetBestBandwidthStream(const CStdString &strFileName)
 {
   // we may be passed a playlist that does not contain playlists of different
   // bitrates (eg: this playlist is really the HLS video). So, default the
@@ -212,7 +213,11 @@ CStdString CPlayListM3U::GetBestBandwidthStream(const CStdString &strFileName, s
   basePlaylistUrl.SetProtocolOptions("");
   CStdString basePart = basePlaylistUrl.Get();
 
-  // convert bandwidth specified in kbps to bps used by the m3u8
+  // get the available bandwidth (as per user settings)
+  int bandwidth = CSettings::Get().GetInt("network.bandwidth");
+  if(bandwidth <= 0)
+      bandwidth = INT_MAX;
+  // convert to bps as used by the m3u8
   bandwidth *= 1000;
 
   while (file.ReadString(szLine, 1024))
