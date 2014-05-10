@@ -40,15 +40,14 @@ namespace XFILE
   bool CStackDirectory::GetDirectory(const CStdString& strPath, CFileItemList& items)
   {
     items.Clear();
-    CStdStringArray files;
+    vector<string> files;
     if (!GetPaths(strPath, files))
       return false;   // error in path
 
-    for (unsigned int i = 0; i < files.size(); i++)
+    for (vector<string>::const_iterator i = files.begin(); i != files.end(); ++i)
     {
-      CStdString file = files[i];
-      CFileItemPtr item(new CFileItem(file));
-      item->SetPath(file);
+      CFileItemPtr item(new CFileItem(*i));
+      item->SetPath(*i);
       item->m_bIsFolder = false;
       items.Add(item);
     }
@@ -172,7 +171,7 @@ namespace XFILE
     return URIUtils::AddFileToFolder(folder, file);
   }
 
-  bool CStackDirectory::GetPaths(const CStdString& strPath, vector<CStdString>& vecPaths)
+  bool CStackDirectory::GetPaths(const CStdString& strPath, vector<string>& vecPaths)
   {
     // format is:
     // stack://file1 , file2 , file3 , file4
@@ -180,14 +179,13 @@ namespace XFILE
     CStdString path = strPath;
     // remove stack:// from the beginning
     path = path.substr(8);
-    
-    vecPaths.clear();
-    StringUtils::SplitString(path, " , ", vecPaths);
+
+    vecPaths = StringUtils::Split(path, " , ");
     if (vecPaths.empty())
       return false;
 
     // because " , " is used as a seperator any "," in the real paths are double escaped
-    for (vector<CStdString>::iterator itPath = vecPaths.begin(); itPath != vecPaths.end(); itPath++)
+    for (vector<string>::iterator itPath = vecPaths.begin(); itPath != vecPaths.end(); itPath++)
       StringUtils::Replace(*itPath, ",,", ",");
 
     return true;
