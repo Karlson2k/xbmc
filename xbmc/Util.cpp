@@ -1030,7 +1030,7 @@ bool CUtil::TestSplitExec()
 }
 #endif
 
-void CUtil::SplitExecFunction(const CStdString &execString, CStdString &function, vector<CStdString> &parameters)
+void CUtil::SplitExecFunction(const CStdString &execString, CStdString &function, vector<string> &parameters)
 {
   CStdString paramString;
 
@@ -1052,7 +1052,7 @@ void CUtil::SplitExecFunction(const CStdString &execString, CStdString &function
   SplitParams(paramString, parameters);
 }
 
-void CUtil::SplitParams(const CStdString &paramString, std::vector<CStdString> &parameters)
+void CUtil::SplitParams(const CStdString &paramString, std::vector<std::string> &parameters)
 {
   bool inQuotes = false;
   bool lastEscaped = false; // only every second character can be escaped
