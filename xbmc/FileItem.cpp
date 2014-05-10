@@ -2337,9 +2337,9 @@ void CFileItemList::StackFolders()
   // Precompile our REs
   VECCREGEXP folderRegExps;
   CRegExp folderRegExp(true, CRegExp::autoUtf8);
-  const CStdStringArray& strFolderRegExps = g_advancedSettings.m_folderStackRegExps;
+  const vector<string>& strFolderRegExps = g_advancedSettings.m_folderStackRegExps;
 
-  CStdStringArray::const_iterator strExpression = strFolderRegExps.begin();
+  vector<string>::const_iterator strExpression = strFolderRegExps.begin();
   while (strExpression != strFolderRegExps.end())
   {
     if (!folderRegExp.RegComp(*strExpression))
@@ -2429,8 +2429,8 @@ void CFileItemList::StackFiles()
   // Precompile our REs
   VECCREGEXP stackRegExps;
   CRegExp tmpRegExp(true, CRegExp::autoUtf8);
-  const CStdStringArray& strStackRegExps = g_advancedSettings.m_videoStackRegExps;
-  CStdStringArray::const_iterator strRegExp = strStackRegExps.begin();
+  const vector<string>& strStackRegExps = g_advancedSettings.m_videoStackRegExps;
+  vector<string>::const_iterator strRegExp = strStackRegExps.begin();
   while (strRegExp != strStackRegExps.end())
   {
     if (tmpRegExp.RegComp(*strRegExp))
@@ -3255,9 +3255,9 @@ CStdString CFileItem::FindTrailer() const
   // Precompile our REs
   VECCREGEXP matchRegExps;
   CRegExp tmpRegExp(true, CRegExp::autoUtf8);
-  const CStdStringArray& strMatchRegExps = g_advancedSettings.m_trailerMatchRegExps;
+  const vector<string>& strMatchRegExps = g_advancedSettings.m_trailerMatchRegExps;
 
-  CStdStringArray::const_iterator strRegExp = strMatchRegExps.begin();
+  vector<string>::const_iterator strRegExp = strMatchRegExps.begin();
   while (strRegExp != strMatchRegExps.end())
   {
     if (tmpRegExp.RegComp(*strRegExp))
