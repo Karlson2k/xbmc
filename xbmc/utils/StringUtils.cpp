@@ -463,7 +463,7 @@ CStdString StringUtils::Join(const vector<string> &strings, const CStdString& de
     result += (*it) + delimiter.c_str();
   
   if (!result.empty())
-    result.erase(result.size()-delimiter.size(), delimiter.size());
+    result.erase(result.size() - delimiter.size());
   return result;
 }
 
