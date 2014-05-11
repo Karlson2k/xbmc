@@ -45,7 +45,7 @@ bool CDAVCommon::ValueWithoutNamespace(const TiXmlNode *pNode, const std::string
     return false;
   }
 
-  std::vector<std::string> tag = StringUtils::Split(pElement->Value(), ":", 2);
+  std::vector<std::string> tag = StringUtils::Split(pElement->ValueStr(), ":", 2);
 
   if (tag.size() == 1 && tag[0] == value)
   {
