@@ -157,9 +157,7 @@ void CGUIMessage::SetStringParam(const string& strParam)
 
 void CGUIMessage::SetStringParams(const vector<string> &params)
 {
-  m_params.clear();
-  for (vector<string>::const_iterator i = params.begin(); i != params.end(); ++i)
-    m_params.push_back(*i);
+  m_params = params;
 }
 
 const std::string& CGUIMessage::GetStringParam(size_t param) const
