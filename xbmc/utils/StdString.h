@@ -3250,6 +3250,4 @@ struct StdStringEqualsNoCaseA
 //  #pragma warn +inl   // Turn back on inline function warnings
 #endif
 
-typedef std::vector<CStdString> CStdStringArray;
-
 #endif  // #ifndef STDSTRING_H
