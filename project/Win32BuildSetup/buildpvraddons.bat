@@ -14,10 +14,11 @@ SET SOURCE=%LIBNAME%
 SET GIT_URL=git://github.com/opdenkamp/%LIBNAME%.git
 SET SOURCE_DIR=%TMP_DIR%\%SOURCE%
 SET BUILT_ADDONS_DIR=%SOURCE_DIR%\addons
+SET MSBUILDROOT=%1
 
 REM check if MSBuild.exe is used because it requires different command line switches
 IF "%msbuildemitsolution%" == "1" (
-  set OPTS_EXE=%SOURCE_DIR%\project\VS2010Express\xbmc-pvr-addons.sln /t:Build /p:Configuration="Release"
+  set OPTS_EXE=%SOURCE_DIR%\project\VS2010Express\xbmc-pvr-addons.sln /t:Build /p:Configuration="Release /property:VCTargetsPath="%MSBUILDROOT%Microsoft.Cpp\v4.0\V120"
 ) ELSE (
   set OPTS_EXE=%SOURCE_DIR%\project\VS2010Express\xbmc-pvr-addons.sln /build Release
 )
@@ -62,7 +63,7 @@ CD "%CUR_DIR%"
 
 REM build xbmc-pvr-addons.sln
 ECHO Building PVR addons
-%1 %OPTS_EXE%
+"%MSBUILDROOT%12.0\bin\MSBuild.exe" %OPTS_EXE%
 
 IF %errorlevel%==1 (
   goto fail
