@@ -88,7 +88,7 @@ public:
   static bool EndsWithNoCase(const std::string &str1, const char *s2);
 
   static CStdString Join(const std::vector<std::string> &strings, const CStdString& delimiter);
-  static std::vector<std::string> Split(const std::string& input, const std::string& delimiter, unsigned int iMaxStrings = 0);
+  static std::vector<std::string> Split(const std::string& input, const std::string& delimiter, size_t maxStrings = 0);
   static int FindNumber(const CStdString& strInput, const CStdString &strFind);
   static int64_t AlphaNumericCompare(const wchar_t *left, const wchar_t *right);
   static long TimeStringToSeconds(const CStdString &timeString);

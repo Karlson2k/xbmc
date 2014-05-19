@@ -467,64 +467,21 @@ CStdString StringUtils::Join(const vector<string> &strings, const CStdString& de
   return result;
 }
 
-vector<string> StringUtils::Split(const std::string& input, const std::string& delimiter, unsigned int iMaxStrings /* = 0 */)
+std::vector<std::string> StringUtils::Split(const std::string& input, const std::string& delimiter, size_t maxStrings /*= 0*/)
 {
-  vector<string> results;
-  if (input.empty())
+  std::vector<std::string> results;
+  if (input.empty() || delimiter.empty() )
     return results;
 
-  size_t iPos = std::string::npos;
-  size_t newPos = std::string::npos;
-  size_t sizeS2 = delimiter.size();
-  size_t isize = input.size();
-
-  vector<unsigned int> positions;
-
-  newPos = input.find(delimiter, 0);
-
-  if (newPos == std::string::npos)
+  const size_t delimLen = delimiter.length();
+  size_t delimPos, textPos = 0;
+  do
   {
-    results.push_back(input);
-    return results;
-  }
+    delimPos = input.find(delimiter, textPos);
+    results.push_back(input.substr(textPos, delimPos - textPos));
+    textPos = delimPos + delimLen;
+  } while (delimPos != std::string::npos && --maxStrings);
 
-  while (newPos != std::string::npos)
-  {
-    positions.push_back(newPos);
-    iPos = newPos;
-    newPos = input.find(delimiter, iPos + sizeS2);
-  }
-
-  // numFound is the number of delimiters which is one less
-  // than the number of substrings
-  unsigned int numFound = positions.size();
-  if (iMaxStrings > 0 && numFound >= iMaxStrings)
-    numFound = iMaxStrings - 1;
-
-  for ( unsigned int i = 0; i <= numFound; i++ )
-  {
-    string s;
-    if ( i == 0 )
-    {
-      if ( i == numFound )
-        s = input;
-      else
-        s = input.substr(i, positions[i]);
-    }
-    else
-    {
-      size_t offset = positions[i - 1] + sizeS2;
-      if ( offset < isize )
-      {
-        if ( i == numFound )
-          s = input.substr(offset);
-        else if ( i > 0 )
-          s = input.substr( positions[i - 1] + sizeS2,
-                         positions[i] - positions[i - 1] - sizeS2 );
-      }
-    }
-    results.push_back(s);
-  }
   return results;
 }
 
