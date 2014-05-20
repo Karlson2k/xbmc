@@ -454,7 +454,7 @@ int CBuiltins::Execute(const CStdString& execString)
 
       // split the path up to find the filename
       vector<string> argv = params;
-      std::string filename = URIUtils::GetFileName(scriptpath);
+      std::string filename(URIUtils::GetFileName(scriptpath));
       if (!filename.empty())
         argv[0] = filename;
 
