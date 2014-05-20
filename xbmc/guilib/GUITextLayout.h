@@ -114,7 +114,6 @@ protected:
   void LineBreakText(const vecText &text, std::vector<CGUIString> &lines);
   void WrapText(const vecText &text, float maxWidth);
   static void BidiTransform(std::vector<CGUIString> &lines, bool forceLTRReadingOrder);
-  static CStdStringW BidiFlip(const CStdStringW &text, bool forceLTRReadingOrder);
   void CalcTextExtent();
   void UpdateCommon(const CStdStringW &text, float maxWidth, bool forceLTRReadingOrder);
 
