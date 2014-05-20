@@ -128,7 +128,14 @@ public:
   static bool utf8ToW(const std::string& utf8StringSrc, std::wstring& wStringDst,
                 bool bVisualBiDiFlip = true, bool forceLTRReadingOrder = false,
                 bool failOnBadChar = false);
-
+  /**
+  * Perform logical to visual flip.
+  * @param logicalStringSrc    is source string with logical characters order
+  * @param visualStringDst     is output string with visual characters order, empty on any error
+  * @param forceLTRReadingOrder        force LTR reading order
+  * @return true on success, false otherwise
+  */
+  static bool wlogicalToVisualBiDi(const std::wstring& logicalStringSrc, std::wstring& visualStringDst, bool forceLTRReadingOrder = false, bool failOnBadString = false);
   static bool utf16LEtoW(const std::u16string& utf16String, std::wstring& wString);
 
   static bool subtitleCharsetToUtf8(const std::string& stringSrc, std::string& utf8StringDst);

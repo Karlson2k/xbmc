@@ -721,6 +721,22 @@ bool CCharsetConverter::utf32logicalToVisualBiDi(const std::u32string& logicalSt
   return CInnerConverter::logicalToVisualBiDi(logicalStringSrc, visualStringDst, forceLTRReadingOrder ? FRIBIDI_TYPE_LTR : FRIBIDI_TYPE_PDF, failOnBadString);
 }
 
+bool CCharsetConverter::wlogicalToVisualBiDi(const std::wstring& logicalStringSrc, std::wstring& visualStringDst, bool forceLTRReadingOrder /*= false*/, bool failOnBadString /*= false*/)
+{
+  visualStringDst.clear();
+  std::u32string utf32logical, utf32visual;
+#ifdef WCHAR_IS_UCS_4
+  utf32logical.assign((const char32_t*)logicalStringSrc.c_str(), logicalStringSrc.length());
+#else // !WCHAR_IS_UCS_4
+  if (!CInnerConverter::stdConvert(Utf32ToW, logicalStringSrc, utf32logical, failOnBadString))
+    return false;
+#endif // !WCHAR_IS_UCS_4
+  if (!CInnerConverter::logicalToVisualBiDi(utf32logical, utf32visual, forceLTRReadingOrder ? FRIBIDI_TYPE_LTR : FRIBIDI_TYPE_PDF, failOnBadString))
+    return false;
+
+  return utf32ToW(utf32visual, visualStringDst, failOnBadString);
+}
+
 bool CCharsetConverter::wToUtf32(const std::wstring& wStringSrc, std::u32string& utf32StringDst, bool failOnBadChar /*= true*/)
 {
 #ifdef WCHAR_IS_UCS_4
