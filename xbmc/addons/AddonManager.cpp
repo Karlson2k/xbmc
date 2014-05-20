@@ -681,10 +681,10 @@ bool CAddonMgr::PlatformSupportsAddon(const cp_plugin_info_t *plugin) const
   if (!metadata)
     return false;
 
-  vector<string> platforms;
+  vector<std::string> platforms;
   if (CAddonMgr::Get().GetExtList(metadata->configuration, "platform", platforms))
   {
-    for (vector<string>::const_iterator platform = platforms.begin(); platform != platforms.end(); ++platform)
+    for (vector<std::string>::const_iterator platform = platforms.begin(); platform != platforms.end(); ++platform)
     {
       if (*platform == "all")
         return true;
