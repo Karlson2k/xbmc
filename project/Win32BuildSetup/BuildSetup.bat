@@ -53,10 +53,12 @@ set WORKSPACE=%CD%\..\..
 	    set NET="%VS120COMNTOOLS%\..\IDE\devenv.com"
 	) ELSE IF EXIST "%VS120COMNTOOLS%\..\IDE\devenv.exe" (
 	    set NET="%VS120COMNTOOLS%\..\IDE\devenv.exe"
-	) ELSE IF "%VS120COMNTOOLS%"=="" (
-	    set NET="%ProgramFiles%\Microsoft Visual Studio 12.0\Common7\IDE\WDExpress.exe"
-	) ELSE IF EXIST "%VS120COMNTOOLS%\..\IDE\WDExpress.exe" (
-	    set NET="%VS120COMNTOOLS%\..\IDE\WDExpress.exe"
+	) ELSE IF EXIST "%ProgramFiles%\Microsoft Visual Studio 12.0\Common7\IDE\devenv.exe" (
+	    set NET="%ProgramFiles%\Microsoft Visual Studio 12.0\Common7\IDE\devenv.exe"
+	) ELSE IF EXIST "%ProgramFiles(x86)%\Microsoft Visual Studio 12.0\Common7\IDE\devenv.exe" (
+	    set NET="%ProgramFiles(x86)%\Microsoft Visual Studio 12.0\Common7\IDE\devenv.exe"
+	) ELSE IF EXIST "%ProgramW6432=%\Microsoft Visual Studio 12.0\Common7\IDE\devenv.exe" (
+	    set NET="%ProgramW6432=%\Microsoft Visual Studio 12.0\Common7\IDE\devenv.exe"
 	)
 
 	set OPTS_EXE="..\VS2010Express\XBMC for Windows.sln" /build "%buildconfig%"
