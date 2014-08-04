@@ -88,6 +88,7 @@
 
 #if WCHAR_MIN < 0
   // wchar_t is signed type
+#pragma message("CharsetConverter: wchar_t is SIGNED")
   #if WCHAR_MAX == 0x7FFF
     #if defined(SIZEOF_WCHAR_T) && SIZEOF_WCHAR_T != 2
       #error SIZEOF_WCHAR_T specifies size not compatible with WCHAR_MAX value
@@ -105,6 +106,7 @@
   #endif // WCHAR_MAX == 0x7FFFFFFF
 #elif defined(WCHAR_MIN) && WCHAR_MIN == 0
   // wchar_t is unsigned type
+#pragma message("CharsetConverter: wchar_t is UNsigned")
   typedef wchar_t uwchar;
   #if WCHAR_MAX == 0xFFFF
     #if defined(SIZEOF_WCHAR_T) && SIZEOF_WCHAR_T != 2
@@ -136,6 +138,11 @@
 #endif // TARGET_WINDOWS
 #endif // WCHAR_SIZE == 2
 
+#if L'\0'-1 < 0
+#error CharsetConverter: L\0-1 < 0: wchar_t must be SIGNED
+#else
+#error CharsetConverter: L\0-1 >= 0: wchar_t must be UNsigned
+#endif
 
 #define NO_ICONV ((iconv_t)-1)
 
