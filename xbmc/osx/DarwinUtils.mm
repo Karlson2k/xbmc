@@ -33,9 +33,13 @@
   #import <UIKit/UIKit.h>
   #import <mach/mach_host.h>
   #import <sys/sysctl.h>
+  #import <mach/port.h>
+  #import <mach/kern_return.h>
+  #import <dlfcn.h>
 #else
   #import <Cocoa/Cocoa.h>
   #import <CoreFoundation/CoreFoundation.h>
+  #import <IOKit/IOKitLib.h>
   #import <IOKit/ps/IOPowerSources.h>
   #import <IOKit/ps/IOPSKeys.h>
 #endif
@@ -578,6 +582,63 @@ bool DarwinCFStringRefToString(CFStringRef source, std::string &destination)
 bool DarwinCFStringRefToUTF8String(CFStringRef source, std::string &destination)
 {
   return DarwinCFStringRefToStringWithEncoding(source, destination, kCFStringEncodingUTF8);
+}
+
+const std::string& CDarwinUtils::GetManufacturer(void)
+{
+  static std::string manufName;
+  if (manufName.empty())
+  {
+#ifdef TARGET_DARWIN_IOS
+	void *IOKit = dlopen("/System/Library/Frameworks/IOKit.framework/IOKit", RTLD_NOW);
+	if (IOKit)
+    {
+      typedef mach_port_t io_object_t;
+      typedef io_object_t io_service_t;
+      mach_port_t* kIOMasterPortDefaultPtr = (mach_port_t *)dlsym(IOKit, "kIOMasterPortDefault");
+      typedef CFMutableDictionaryRef (*IOServiceMatchingTmpl)(const char *name);
+      IOServiceMatchingTmpl IOServiceMatching = (IOServiceMatchingTmpl)dlsym(IOKit, "IOServiceMatching");
+      typedef io_object_t (*IOServiceGetMatchingServiceTmpl)(mach_port_t masterPort, CFDictionaryRef matching);
+      IOServiceGetMatchingServiceTmpl IOServiceGetMatchingService = (IOServiceGetMatchingServiceTmpl)dlsym(IOKit, "IOServiceGetMatchingService");
+      typedef CFTypeRef (*IORegistryEntryCreateCFPropertyTmpl)(io_object_t entry, CFStringRef key, CFAllocatorRef allocator, uint32_t options);
+      IORegistryEntryCreateCFPropertyTmpl IORegistryEntryCreateCFProperty= (IORegistryEntryCreateCFPropertyTmpl)dlsym(IOKit, "IORegistryEntryCreateCFProperty");
+      typedef kern_return_t (*IOObjectReleaseTmpl)(io_object_t object);
+      IOObjectReleaseTmpl IOObjectRelease = (IOObjectReleaseTmpl) dlsym(IOKit, "IOObjectRelease");
+      
+      if (kIOMasterPortDefaultPtr && IOServiceGetMatchingService && IORegistryEntryCreateCFProperty && IOObjectRelease)
+      {
+        mach_port_t& kIOMasterPortDefault = *kIOMasterPortDefaultPtr;
+#endif // TARGET_DARWIN_IOS
+
+        const CFMutableDictionaryRef matchExpDev = IOServiceMatching("IOPlatformExpertDevice");
+        if (matchExpDev)
+        {
+          const io_service_t servExpDev = IOServiceGetMatchingService(kIOMasterPortDefault, matchExpDev);
+          if (servExpDev)
+          {
+            CFTypeRef manufacturer = IORegistryEntryCreateCFProperty(servExpDev, CFSTR("manufacturer"), kCFAllocatorDefault, 0);
+            if (manufacturer)
+            {
+              if (CFGetTypeID(manufacturer) == CFStringGetTypeID())
+                manufName = (const char*)[[NSString stringWithString:(__bridge NSString *)manufacturer] UTF8String];
+              else if (CFGetTypeID(manufacturer) == CFDataGetTypeID())
+              {
+                manufName.assign((const char*)CFDataGetBytePtr((CFDataRef)manufacturer), CFDataGetLength((CFDataRef)manufacturer));
+                if (!manufName.empty() && manufName[manufName.length() - 1] == 0)
+                  manufName.erase(manufName.length() - 1); // remove extra null at the end if any
+              }
+              CFRelease(manufacturer);
+            }
+          }
+          IOObjectRelease(servExpDev);
+        }
+#ifdef TARGET_DARWIN_IOS
+      }
+      dlclose(IOKit);
+    }
+#endif // TARGET_DARWIN_IOS
+  }
+  return manufName;
 }
 
 #endif
