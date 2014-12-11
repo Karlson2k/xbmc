@@ -843,7 +843,7 @@ struct MHD_Daemon* CWebServer::StartMHD(unsigned int flags, int port)
                           this,
 
 #if (MHD_VERSION >= 0x00040002) && (MHD_VERSION < 0x00090B01)
-                          MHD_OPTION_THREAD_POOL_SIZE, 4,
+                          MHD_OPTION_THREAD_POOL_SIZE, 8,
 #endif
                           MHD_OPTION_CONNECTION_LIMIT, 512,
                           MHD_OPTION_CONNECTION_TIMEOUT, timeout,
