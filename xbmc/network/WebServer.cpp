@@ -787,6 +787,14 @@ void CWebServer::ContentReaderFreeCallback(void *cls)
 }
 
 // local helper
+static void MHDPanicHandler(void* unused, const char* file, unsigned int line, const char *reason)
+{
+  CLog::Log(LOGSEVERE, "MHD serious error: reason \"%s\" in file \"%s\" at line %ui", reason ? reason : "",
+            file ? file : "", line);
+  throw new exception("MHD serious error");
+}
+
+// local helper
 static void logFromMHD(void* unused, const char* fmt, va_list ap)
 {
   if (fmt == NULL || fmt[0] == 0)
@@ -808,6 +816,10 @@ static void logFromMHD(void* unused, const char* fmt, va_list ap)
 struct MHD_Daemon* CWebServer::StartMHD(unsigned int flags, int port)
 {
   unsigned int timeout = 60 * 60 * 24;
+
+#if MHD_VERSION >= 0x00040500
+  MHD_set_panic_func(&MHDPanicHandler, NULL);
+#endif
 
   return MHD_start_daemon(flags |
 #if (MHD_VERSION >= 0x00040002) && (MHD_VERSION < 0x00090B01)
