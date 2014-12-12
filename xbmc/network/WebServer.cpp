@@ -786,6 +786,25 @@ void CWebServer::ContentReaderFreeCallback(void *cls)
 #endif
 }
 
+// local helper
+static void logFromMHD(void* unused, const char* fmt, va_list ap)
+{
+  if (fmt == NULL || fmt[0] == 0)
+    CLog::Log(LOGERROR, "MHD reported error with empty string");
+  else
+  {
+    std::string errDsc = StringUtils::FormatV(fmt, ap);
+    if (errDsc.empty())
+      CLog::Log(LOGERROR, "MHD reported error with unprintable string \"%s\"", fmt);
+    else
+    {
+      if (errDsc.at(errDsc.length() - 1) == '\n')
+        errDsc.erase(errDsc.length() - 1);
+      CLog::Log(LOGERROR, "MHD error: %s", errDsc.c_str());
+    }
+  }
+}
+
 struct MHD_Daemon* CWebServer::StartMHD(unsigned int flags, int port)
 {
   unsigned int timeout = 60 * 60 * 24;
@@ -801,6 +820,9 @@ struct MHD_Daemon* CWebServer::StartMHD(unsigned int flags, int port)
                           // otherwise on libmicrohttpd 0.4.4-1 it spins a busy loop
                           MHD_USE_THREAD_PER_CONNECTION
 #endif
+#if (MHD_VERSION >= 0x00040001)
+                          | MHD_USE_DEBUG /* Print MHD error messages to log */
+#endif 
                           ,
                           port,
                           NULL,
@@ -814,6 +836,9 @@ struct MHD_Daemon* CWebServer::StartMHD(unsigned int flags, int port)
                           MHD_OPTION_CONNECTION_LIMIT, 512,
                           MHD_OPTION_CONNECTION_TIMEOUT, timeout,
                           MHD_OPTION_URI_LOG_CALLBACK, &CWebServer::UriRequestLogger, this,
+#if (MHD_VERSION >= 0x00040001)
+                          MHD_OPTION_EXTERNAL_LOGGER, &logFromMHD, NULL,
+#endif // MHD_VERSION >= 0x00040001
                           MHD_OPTION_END);
 }
 
