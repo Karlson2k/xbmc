@@ -28,7 +28,7 @@
 #include "interfaces/generic/ILanguageInvocationHandler.h"
 #include "addons/IAddon.h"
 
-#include <boost/shared_ptr.hpp>
+#include <memory>
 #include <vector>
 
 struct _ts; // forward declaration
