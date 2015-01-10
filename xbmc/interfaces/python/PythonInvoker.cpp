@@ -147,12 +147,23 @@ bool CPythonInvoker::execute(const std::string &script, const std::vector<std::s
   m_sourceFile = script;
 
   // copy the arguments into a local buffer
-  m_argc = arguments.size();
-  m_argv = new char*[m_argc];
-  for (unsigned int i = 0; i < m_argc; i++)
+  if (arguments.empty())
   {
-    m_argv[i] = new char[arguments.at(i).length() + 1];
-    strcpy(m_argv[i], arguments.at(i).c_str());
+    // set first argument (script name) to empty string
+    m_argc = 1;
+    m_argv = new char*[1];
+    m_argv[0] = new char[1];
+    m_argv[0][0] = 0;
+  }
+  else
+  {
+    m_argc = arguments.size();
+    m_argv = new char*[m_argc];
+    for (unsigned int i = 0; i < m_argc; i++)
+    {
+      m_argv[i] = new char[arguments.at(i).length() + 1];
+      strcpy(m_argv[i], arguments.at(i).c_str());
+    }
   }
 
   CLog::Log(LOGDEBUG, "CPythonInvoker(%d, %s): start processing", GetId(), m_sourceFile.c_str());
@@ -228,10 +239,14 @@ bool CPythonInvoker::execute(const std::string &script, const std::vector<std::s
 
   Py_DECREF(sysMod); // release ref to sysMod
 
-  // set current directory and python's path.
-  if (m_argv != NULL)
-    PySys_SetArgv(m_argc, m_argv);
+#if PY_VERSION_HEX >= 0x02060600
+  PySys_SetArgvEx(m_argc, m_argv, 0);
+#else
+  PySys_SetArgv(m_argc, m_argv);
+  PyRun_SimpleString("import sys; sys.path.pop(0)\n");
+#endif
 
+  // set current directory and python's path.
 #ifdef TARGET_WINDOWS
   std::string pyPathUtf8;
   g_charsetConverter.systemToUtf8(m_pythonPath, pyPathUtf8, false);
