@@ -972,9 +972,11 @@ extern "C"
 {
   FILE *fopen_utf8(const char *_Filename, const char *_Mode)
   {
-    std::string modetmp = _Mode;
-    std::wstring wfilename, wmode(modetmp.begin(), modetmp.end());
-    g_charsetConverter.utf8ToW(_Filename, wfilename, false);
+    std::wstring wfilename, wmode;
+    if (!g_charsetConverter.utf8ToW(_Filename, wfilename, false, false, true) ||
+        !g_charsetConverter.utf8ToW(_Mode, wmode, false, false, true))
+      return NULL;
+
     return _wfopen(wfilename.c_str(), wmode.c_str());
   }
 }
