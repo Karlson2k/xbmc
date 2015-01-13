@@ -29,10 +29,8 @@
 class CPyThreadState
 {
   public:
-    CPyThreadState(bool save = true)
+    CPyThreadState(bool save = true) : m_threadState(NULL)
     {
-      m_threadState = NULL;
-
       if (save)
         Save();
     }
