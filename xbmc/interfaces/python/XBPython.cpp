@@ -538,20 +538,17 @@ bool XBPython::InitializeEngine()
       setenv("PYTHONNOUSERSITE","1",1);
 #endif
 
+      // If this is not the first time we initialize Python, the interpreter
+      // lock already exists and we need to lock it as PyEval_InitThreads
+      // would not do that in that case.
       if (PyEval_ThreadsInitialized())
         PyEval_AcquireLock();
       else
         PyEval_InitThreads();
 
       Py_Initialize();
-      PyEval_ReleaseLock();
-
-      // If this is not the first time we initialize Python, the interpreter
-      // lock already exists and we need to lock it as PyEval_InitThreads
-      // would not do that in that case.
-      PyEval_AcquireLock();
-      char* python_argv[1] = { (char*)"" } ;
-      PySys_SetArgv(1, python_argv);
+      static const char* python_argv[1] = { "" };
+      PySys_SetArgv(1, (char**)python_argv);
 
       if (!(m_mainThreadState = PyThreadState_Get()))
         CLog::Log(LOGERROR, "Python threadstate is NULL.");
