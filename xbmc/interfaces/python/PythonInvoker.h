@@ -36,6 +36,8 @@ public:
 
   virtual bool IsStopping() const { return m_stop || ILanguageInvoker::IsStopping(); }
 
+  virtual const char* GetInvokerName() const { return "PythonInvoker"; }
+
   typedef void (*PythonModuleInitialization)();
   
 protected:

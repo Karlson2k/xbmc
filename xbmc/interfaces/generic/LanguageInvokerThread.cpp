@@ -23,7 +23,7 @@
 
 CLanguageInvokerThread::CLanguageInvokerThread(ILanguageInvoker *invoker, CScriptInvocationManager *invocationManager)
   : ILanguageInvoker(NULL),
-    CThread("LanguageInvoker"),
+    CThread(invoker ? invoker->GetInvokerName() : "LanguageInvoker"),
     m_invoker(invoker),
     m_invocationManager(invocationManager)
 { }

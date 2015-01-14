@@ -26,6 +26,7 @@ class CAddonPythonInvoker : public CPythonInvoker
 public:
   CAddonPythonInvoker(ILanguageInvocationHandler *invocationHandler);
   virtual ~CAddonPythonInvoker();
+  virtual const char* GetInvokerName() const { return "AddonPythonInvoker"; }
 
 protected:
   // overrides of CPythonInvoker
