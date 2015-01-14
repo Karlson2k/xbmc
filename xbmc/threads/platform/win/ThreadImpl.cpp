@@ -21,7 +21,7 @@
 #include <windows.h>
 #include "threads/platform/win/Win32Exception.h"
 
-void CThread::SpawnThread(unsigned stacksize)
+void CThread::SpawnThread(unsigned stacksize /*= 0*/)
 {
   // Create in the suspended state, so that no matter the thread priorities and scheduled order, the handle will be assigned
   // before the new thread exits.
