@@ -61,6 +61,7 @@ public:
   bool IsActive() const { return GetState() > InvokerStateUninitialized && GetState() < InvokerStateDone; }
   bool IsRunning() const { return GetState() == InvokerStateRunning; }
   virtual bool IsStopping() const { return GetState() == InvokerStateStopping; }
+  virtual const char* GetInvokerName() const { return "LanguageInvoker"; }
 
 protected:
   friend class CLanguageInvokerThread;
