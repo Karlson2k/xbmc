@@ -38,7 +38,7 @@
 
 #include <signal.h>
 
-void CThread::SpawnThread(unsigned stacksize)
+void CThread::SpawnThread(unsigned stacksize /*= 0*/)
 {
   pthread_attr_t attr;
   pthread_attr_init(&attr);

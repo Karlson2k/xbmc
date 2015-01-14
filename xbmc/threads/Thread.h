@@ -119,7 +119,7 @@ private:
   void SetThreadInfo();
   void TermHandler();
   void SetSignalHandlers();
-  void SpawnThread(unsigned stacksize);
+  void SpawnThread(unsigned stacksize = 0);
   // -----------------------------------------------------------------------------------
 
   ThreadIdentifier m_ThreadId;
