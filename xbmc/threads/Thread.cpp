@@ -81,7 +81,7 @@ CThread::~CThread()
   StopThread();
 }
 
-void CThread::Create(bool bAutoDelete, unsigned stacksize)
+void CThread::Create(bool bAutoDelete /*= false*/, unsigned stacksize /*= 0*/)
 {
   if (m_ThreadId != 0)
   {
