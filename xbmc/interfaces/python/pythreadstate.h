@@ -30,24 +30,24 @@
 class CPyThreadState
 {
   public:
-    CPyThreadState(bool save = true) : m_threadState(NULL)
+    CPyThreadState(bool allowOtherPyThreads = true) : m_threadState(NULL)
     {
-      if (save)
-        Save();
+      if (allowOtherPyThreads)
+        BeginAllowOtherPyThreads();
     }
 
     ~CPyThreadState()
     {
-      Restore();
+      EndAllowOtherPyThreads();
     }
 
-    void Save()
+    void BeginAllowOtherPyThreads()
     {
       if (!m_threadState)
         m_threadState = PyEval_SaveThread(); //same as Py_BEGIN_ALLOW_THREADS
     }
 
-    void Restore()
+    void EndAllowOtherPyThreads()
     {
       if (m_threadState)
       {
