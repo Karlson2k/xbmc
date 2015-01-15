@@ -373,7 +373,7 @@ bool CPythonInvoker::execute(const std::string &script, const std::vector<std::s
 
     CPyThreadState pyState;
     Sleep(100);
-    pyState.Restore();
+    pyState.EndAllowOtherPyThreads();
 
     s = state->interp->tstate_head;
   }
