@@ -31,6 +31,9 @@
 #include <boost/shared_ptr.hpp>
 #include <vector>
 
+struct _ts; // forward declaration
+typedef struct _ts PyThreadState; // forward declaration
+
 class CPythonInvoker;
 
 typedef struct {
@@ -114,7 +117,8 @@ private:
   CCriticalSection    m_critSection;
   bool              FileExist(const char* strFile);
 
-  void*             m_mainThreadState;
+  PyThreadState*    m_mainThreadState;
+  PyThreadState*    m_createdThreadState; // store Python thread state if it was created in initializer
   ThreadIdentifier  m_ThreadId;
   bool              m_bInitialized;
   int               m_iDllScriptCounter; // to keep track of the total scripts running that need the dll
