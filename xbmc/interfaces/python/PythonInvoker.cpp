@@ -70,6 +70,8 @@ extern "C"
 
 #define PythonModulesSize sizeof(PythonModules) / sizeof(PythonModule)
 
+XBMCCOMMONS_STANDARD_EXCEPTION(CharsetConversionException);
+
 CCriticalSection CPythonInvoker::s_critical;
 
 static const std::string getListOfAddonClassesAsString(XBMCAddon::AddonClass::Ref<XBMCAddon::Python::PythonLanguageHook>& languageHook)
@@ -284,7 +286,7 @@ bool CPythonInvoker::execute(const std::string &script, const std::vector<std::s
       if (!g_charsetConverter.utf8ToSystem(nativeFilename, true))
       {
         CLog::Log(LOGERROR, "CPythonInvoker(%d, %s): can't convert filename \"%s\" to system encoding", GetId(), m_sourceFile.c_str(), realFilename.c_str());
-        return false;
+        throw new CharsetConversionException("Can't convert filename to system encoding");
       }
 #endif
       PyObject* file = PyFile_FromString((char *)nativeFilename.c_str(), (char*)"r");
