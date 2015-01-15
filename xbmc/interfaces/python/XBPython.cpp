@@ -56,7 +56,7 @@
 
 using namespace ANNOUNCEMENT;
 
-XBPython::XBPython()
+XBPython::XBPython() : m_createdThreadState(NULL)
 {
   m_bInitialized      = false;
   m_mainThreadState   = NULL;
@@ -538,20 +538,37 @@ bool XBPython::InitializeEngine()
       setenv("PYTHONNOUSERSITE","1",1);
 #endif
 
+      Py_Initialize();
+
       // If this is not the first time we initialize Python, the interpreter
       // lock already exists and we need to lock it as PyEval_InitThreads
       // would not do that in that case.
       if (PyEval_ThreadsInitialized())
-        PyEval_AcquireLock();
+      { // This is not first Python initialization
+        CLog::LogF(LOGDEBUG, "Python threads were already initialized");
+        PyEval_AcquireLock(); // Acquire GIL
+        PyThreadState* curThrPyState = PyGILState_GetThisThreadState();
+        if (curThrPyState != NULL)
+        {
+          CLog::LogF(LOGDEBUG, "Current thread was already registered in Python");
+          m_mainThreadState = curThrPyState;
+        }
+        else
+        {
+          CLog::LogF(LOGDEBUG, "Current thread was not registered in Python");
+          m_createdThreadState = PyThreadState_New(PyThreadState_Get()->interp); // No need for NULL check as NULL is a fatal error
+          PyThreadState_Swap(m_createdThreadState);
+          m_mainThreadState = m_createdThreadState;
+        }
+      }
       else
-        PyEval_InitThreads();
+      { // First Python initialization, current thread is registered by Py_Initialize()/PyEval_InitThreads()
+        CLog::LogF(LOGDEBUG, "Initializing Python threads");
+        PyEval_InitThreads(); // Also acquire GIL
+      }
 
-      Py_Initialize();
       static const char* python_argv[1] = { "" };
       PySys_SetArgv(1, (char**)python_argv);
-
-      if (!(m_mainThreadState = PyThreadState_Get()))
-        CLog::Log(LOGERROR, "Python threadstate is NULL.");
       PyEval_ReleaseLock();
 
       m_bInitialized = true;
@@ -583,19 +600,23 @@ void XBPython::Finalize()
   {
     CLog::Log(LOGINFO, "Python, unloading python shared library because no scripts are running anymore");
 
-    // set the m_bInitialized flag before releasing the lock. This will prevent
-    // Other methods that rely on this flag from an incorrect interpretation.
     m_bInitialized    = false;
-    PyThreadState* curTs = (PyThreadState*)m_mainThreadState;
-    m_mainThreadState = NULL; // clear the main thread state before releasing the lock
-    {
-      CSingleExit exit(m_critSection);
-      PyEval_AcquireLock();
-      PyThreadState_Swap(curTs);
+    PyEval_AcquireLock();
+    PyThreadState_Swap(m_mainThreadState);
 
-      Py_Finalize();
-      PyEval_ReleaseLock();
+    if (m_createdThreadState)
+    {
+      PyThreadState_Swap(NULL);
+      PyThreadState_Clear(m_createdThreadState);
+      PyThreadState_Delete(m_createdThreadState);
+      m_createdThreadState = NULL;
     }
+    
+    Py_Finalize();
+    PyEval_ReleaseLock();
+    m_mainThreadState = NULL;
+
+    CLog::LogF(LOGDEBUG, "Python was deinitialized");
 
 #if !(defined(TARGET_DARWIN) || defined(TARGET_WINDOWS))
     UnloadExtensionLibs();
