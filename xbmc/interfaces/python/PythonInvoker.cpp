@@ -189,6 +189,7 @@ bool CPythonInvoker::execute(const std::string &script, const std::vector<std::s
   else
     CLog::Log(LOGDEBUG, "CPythonInvoker(%d, %s): the source file to load is \"%s\" (\"%s\")", GetId(), m_sourceFile.c_str(), m_sourceFile.c_str(), realFilename.c_str());
 
+  m_pythonPath.clear();
   // get path from script file name and add python path's
   // this is used for python so it will search modules from script path first
   std::string scriptDir = URIUtils::GetDirectory(realFilename);
