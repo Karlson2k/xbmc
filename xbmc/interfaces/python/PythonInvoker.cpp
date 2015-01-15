@@ -181,6 +181,8 @@ bool CPythonInvoker::execute(const std::string &script, const std::vector<std::s
   onInitialization();
   setState(InvokerStateInitialized);
 
+  CPyThreadState pyOtherThreads(true);
+
   std::string realFilename(CSpecialProtocol::TranslatePath(m_sourceFile));
   if (realFilename == m_sourceFile)
     CLog::Log(LOGDEBUG, "CPythonInvoker(%d, %s): the source file to load is \"%s\"", GetId(), m_sourceFile.c_str(), m_sourceFile.c_str());
@@ -213,6 +215,7 @@ bool CPythonInvoker::execute(const std::string &script, const std::vector<std::s
       addPath(CSpecialProtocol::TranslatePath(addons[i]->LibPath()));
   }
 
+  pyOtherThreads.EndAllowOtherPyThreads();
   // we want to use sys.path so it includes site-packages
   // if this fails, default to using Py_GetPath
   PyObject *sysMod(PyImport_ImportModule((char*)"sys")); // must call Py_DECREF when finished
@@ -255,8 +258,7 @@ bool CPythonInvoker::execute(const std::string &script, const std::vector<std::s
   PyObject* moduleDict = PyModule_GetDict(module);
 
   // when we are done initing we store thread state so we can be aborted
-  PyThreadState_Swap(NULL);
-  PyEval_ReleaseLock();
+  pyOtherThreads.BeginAllowOtherPyThreads();
 
   // we need to check if we was asked to abort before we had inited
   bool stopping = false;
@@ -265,8 +267,7 @@ bool CPythonInvoker::execute(const std::string &script, const std::vector<std::s
     stopping = m_stop;
   }
 
-  PyEval_AcquireLock();
-  PyThreadState_Swap(state);
+  pyOtherThreads.EndAllowOtherPyThreads();
 
   bool failed = false;
   if (!stopping)
@@ -371,9 +372,9 @@ bool CPythonInvoker::execute(const std::string &script, const std::vector<std::s
       old = s;
     }
 
-    CPyThreadState pyState;
+    pyOtherThreads.BeginAllowOtherPyThreads();
     Sleep(100);
-    pyState.EndAllowOtherPyThreads();
+    pyOtherThreads.EndAllowOtherPyThreads();
 
     s = state->interp->tstate_head;
   }
@@ -381,8 +382,7 @@ bool CPythonInvoker::execute(const std::string &script, const std::vector<std::s
   // pending calls must be cleared out
   XBMCAddon::RetardedAsynchCallbackHandler::clearPendingCalls(state);
 
-  PyThreadState_Swap(NULL);
-  PyEval_ReleaseLock();
+  pyOtherThreads.BeginAllowOtherPyThreads();
 
   // set stopped event - this allows ::stop to run and kill remaining threads
   // this event has to be fired without holding m_critical
@@ -394,8 +394,7 @@ bool CPythonInvoker::execute(const std::string &script, const std::vector<std::s
     m_threadState = NULL;
   }
 
-  PyEval_AcquireLock();
-  PyThreadState_Swap(state);
+  pyOtherThreads.EndAllowOtherPyThreads();
 
   onDeinitialization();
 
