@@ -545,6 +545,7 @@ void CPythonInvoker::onInitialization()
   const char* runscript = getInitializationScript();
   if (runscript!= NULL && strlen(runscript) > 0)
   {
+    GilSafeSingleLock lock(s_critical);
     // redirecting default output to debug console
     if (PyRun_SimpleString(runscript) == -1)
       CLog::Log(LOGFATAL, "CPythonInvoker(%d, %s): initialize error", GetId(), m_sourceFile.c_str());
