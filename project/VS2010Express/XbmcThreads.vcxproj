@@ -115,6 +115,9 @@
       <PrecompiledHeaderFile>commons.hpp</PrecompiledHeaderFile>
       <DisableSpecificWarnings>4800;4018;4146;4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <ExceptionHandling>Async</ExceptionHandling>
+      <StringPooling>false</StringPooling>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <OmitFramePointers>false</OmitFramePointers>
     </ClCompile>
     <Lib>
       <OutputFile>$(OutDir)$(ProjectName).lib</OutputFile>
