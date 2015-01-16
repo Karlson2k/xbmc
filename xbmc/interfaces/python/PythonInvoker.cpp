@@ -62,12 +62,6 @@
 using namespace std;
 using namespace XFILE;
 
-extern "C"
-{
-  int xbp_chdir(const char *dirname);
-  char* dll_getenv(const char* szKey);
-}
-
 #define PythonModulesSize sizeof(PythonModules) / sizeof(PythonModule)
 
 XBMCCOMMONS_STANDARD_EXCEPTION(CharsetConversionException);
