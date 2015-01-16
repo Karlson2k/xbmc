@@ -81,8 +81,6 @@
       <AdditionalIncludeDirectories>..\..\xbmc;..\..\xbmc\win32</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NOMINMAX;_LIB;_USE_32BIT_TIME_T;HAS_DX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeaderFile>commons.hpp</PrecompiledHeaderFile>
-      <DebugInformationFormat>
-      </DebugInformationFormat>
       <DisableSpecificWarnings>4800;4018;4146;4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
     <Lib />
