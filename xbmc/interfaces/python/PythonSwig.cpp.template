@@ -785,10 +785,10 @@ namespace PythonBindings
 
   // This is the call that will call all of the other initializes 
   //  for all of the classes in this module
-  static void initTypes()
+  static void initTypes(bool forceInit = false)
   {
     static bool typesAlreadyInitialized = false;
-    if (!typesAlreadyInitialized)
+    if (!typesAlreadyInitialized || forceInit)
     {
       typesAlreadyInitialized = true;
 <%
@@ -803,9 +803,9 @@ namespace PythonBindings
     }
   }
 
-  void initModule_${module.@name}()
+  void initModule_${module.@name}(bool forceInit)
   {
-    initTypes();
+    initTypes(forceInit);
 
     // init general ${module.@name} modules
     PyObject* module;

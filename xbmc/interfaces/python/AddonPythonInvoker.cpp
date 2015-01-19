@@ -81,11 +81,11 @@
   RUNSCRIPT_PRAMBLE RUNSCRIPT_POSTSCRIPT
 
 namespace PythonBindings {
-  void initModule_xbmcgui(void);
-  void initModule_xbmc(void);
-  void initModule_xbmcplugin(void);
-  void initModule_xbmcaddon(void);
-  void initModule_xbmcvfs(void);
+  void initModule_xbmcgui(bool forceInit);
+  void initModule_xbmc(bool forceInit);
+  void initModule_xbmcplugin(bool forceInit);
+  void initModule_xbmcaddon(bool forceInit);
+  void initModule_xbmcvfs(bool forceInit);
 }
 
 using namespace std;
