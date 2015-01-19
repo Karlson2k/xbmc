@@ -28,8 +28,10 @@ public:
   virtual ~CAddonPythonInvoker();
   virtual const char* GetInvokerName() const { return "AddonPythonInvoker"; }
 
+  static const std::map<std::string, PythonModuleInitialization>& getAddonModules();
+
 protected:
   // overrides of CPythonInvoker
-  virtual std::map<std::string, PythonModuleInitialization> getModules() const;
+  virtual const std::map<std::string, PythonModuleInitialization>& getModules() const;
   virtual const char* getInitializationScript() const;
 };

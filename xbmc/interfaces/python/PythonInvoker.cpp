@@ -532,7 +532,7 @@ void CPythonInvoker::onExecutionFailed()
   ILanguageInvoker::onExecutionFailed();
 }
 
-std::map<std::string, CPythonInvoker::PythonModuleInitialization> CPythonInvoker::getModules() const
+const std::map<std::string, CPythonInvoker::PythonModuleInitialization>& CPythonInvoker::getModules() const
 {
   static std::map<std::string, PythonModuleInitialization> modules;
   return modules;
