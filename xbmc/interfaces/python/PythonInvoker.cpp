@@ -618,7 +618,7 @@ bool CPythonInvoker::initializeModule(PythonModuleInitialization module)
   if (module == NULL)
     return false;
 
-  module();
+  module(false);
   return true;
 }
 

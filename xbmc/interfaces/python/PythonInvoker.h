@@ -38,7 +38,7 @@ public:
 
   virtual const char* GetInvokerName() const { return "PythonInvoker"; }
 
-  typedef void (*PythonModuleInitialization)();
+  typedef void (*PythonModuleInitialization)(bool forceInit);
   
 protected:
   // implementation of ILanguageInvoker
