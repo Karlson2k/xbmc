@@ -60,16 +60,3 @@ class CPyThreadState
     PyThreadState* m_threadState;
 };
 
-/**
- * A CSingleLock that will relinquish the GIL during the time
- *  it takes to obtain the CriticalSection
- */
-class GilSafeSingleLock : public CSingleLock
-{
-public:
-  GilSafeSingleLock(const CCriticalSection& critSec) : CSingleLock(critSec), m_GILState(PyGILState_Ensure())  { }
-  ~GilSafeSingleLock() { PyGILState_Release(m_GILState); }
-private:
-  PyGILState_STATE m_GILState;
-};
-
