@@ -472,11 +472,11 @@ void XBPython::UnloadExtensionLibs()
 bool XBPython::InitializeEngine()
 {
   XBMC_TRACE;
-  CLog::Log(LOGINFO, "initializing python engine.");
   CSingleLock lock(m_critSection);
   m_iDllScriptCounter++;
   if (!m_bInitialized)
   {
+      CLog::LogF(LOGNOTICE, "Initializing python engine");
       // first we check if all necessary files are installed
 #ifndef TARGET_POSIX
       if(!FileExist("special://xbmc/system/python/DLLs/_socket.pyd") ||
@@ -573,6 +573,8 @@ bool XBPython::InitializeEngine()
 
       m_bInitialized = true;
   }
+  else
+    CLog::LogF(LOGINFO, "Using already initialized Python engine");
 
   return m_bInitialized;
 }

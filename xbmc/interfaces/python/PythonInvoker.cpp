@@ -132,7 +132,10 @@ bool CPythonInvoker::Execute(const std::string &script, const std::vector<std::s
   }
 
   if (!g_pythonParser.InitializeEngine())
+  {
+    CLog::LogF(LOGERROR, "Can't initialize Python engine");
     return false;
+  }
 
   return ILanguageInvoker::Execute(script, arguments);
 }
