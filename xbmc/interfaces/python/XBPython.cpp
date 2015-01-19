@@ -569,6 +569,17 @@ bool XBPython::InitializeEngine()
 
       static const char* python_argv[1] = { "" };
       PySys_SetArgv(1, (char**)python_argv);
+
+      const std::map<std::string, CPythonInvoker::PythonModuleInitialization>& addonModules = CAddonPythonInvoker::getAddonModules();
+      for (std::map<std::string, CPythonInvoker::PythonModuleInitialization>::const_iterator module = addonModules.begin(); module != addonModules.end(); ++module)
+      {
+        if (module->second != NULL)
+        {
+          CLog::LogF(LOGDEBUG, "Initializing addon module \"%s\"", module->first.c_str());
+          module->second(true);
+        }
+      }
+
       PyEval_ReleaseLock();
 
       m_bInitialized = true;
