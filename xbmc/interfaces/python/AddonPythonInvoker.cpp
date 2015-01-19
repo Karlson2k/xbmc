@@ -115,7 +115,12 @@ CAddonPythonInvoker::CAddonPythonInvoker(ILanguageInvocationHandler *invocationH
 CAddonPythonInvoker::~CAddonPythonInvoker()
 { }
 
-std::map<std::string, CPythonInvoker::PythonModuleInitialization> CAddonPythonInvoker::getModules() const
+const std::map<std::string, CPythonInvoker::PythonModuleInitialization>& CAddonPythonInvoker::getModules() const
+{
+  return getAddonModules();
+}
+
+const std::map<std::string, CPythonInvoker::PythonModuleInitialization>& CAddonPythonInvoker::getAddonModules()
 {
   static std::map<std::string, PythonModuleInitialization> modules;
   if (modules.empty())
