@@ -798,7 +798,8 @@ void CXBMCRenderManager::PresentSingle(bool clear, DWORD flags, DWORD alpha)
 {
   CSingleLock lock(g_graphicsContext);
 
-  m_pRenderer->RenderUpdate(clear, flags, alpha);
+  if (IsConfigured())
+    m_pRenderer->RenderUpdate(clear, flags, alpha);
 }
 
 /* new simpler method of handling interlaced material, *
