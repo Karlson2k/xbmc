@@ -40,34 +40,11 @@
 
 using namespace std;
 
-string trimRight(const string &str)
-{
-  string tmp = str;
-  // find_last_not_of will return string::npos (which is defined as -1)
-  // or a value between 0 and size() - 1 => find_last_not_of() + 1 will
-  // always result in a valid index between 0 and size()
-  tmp.erase(tmp.find_last_not_of(" \n\r\t") + 1);
-
-  return tmp;
-}
-
-wstring trimRight(const wstring &str)
-{
-  wstring tmp = str;
-  // find_last_not_of will return string::npos (which is defined as -1)
-  // or a value between 0 and size() - 1 => find_last_not_of() + 1 will
-  // always result in a valid index between 0 and size()
-  tmp.erase(tmp.find_last_not_of(L" \n\r\t") + 1);
-
-  return tmp;
-}
-
 int64_t str2int64(const string &str, int64_t fallback /* = 0 */)
 {
   char *end = NULL;
-  string tmp = trimRight(str);
-  int64_t result = strtoll(tmp.c_str(), &end, 0);
-  if (end == NULL || *end == '\0')
+  int64_t result = strtoll(str.c_str(), &end, 0);
+  if (end != NULL && end != str.c_str())
     return result;
 
   return fallback;
@@ -76,9 +53,8 @@ int64_t str2int64(const string &str, int64_t fallback /* = 0 */)
 int64_t str2int64(const wstring &str, int64_t fallback /* = 0 */)
 {
   wchar_t *end = NULL;
-  wstring tmp = trimRight(str);
-  int64_t result = wcstoll(tmp.c_str(), &end, 0);
-  if (end == NULL || *end == '\0')
+  int64_t result = wcstoll(str.c_str(), &end, 0);
+  if (end != NULL && end != str.c_str())
     return result;
 
   return fallback;
@@ -87,9 +63,8 @@ int64_t str2int64(const wstring &str, int64_t fallback /* = 0 */)
 uint64_t str2uint64(const string &str, uint64_t fallback /* = 0 */)
 {
   char *end = NULL;
-  string tmp = trimRight(str);
-  uint64_t result = strtoull(tmp.c_str(), &end, 0);
-  if (end == NULL || *end == '\0')
+  uint64_t result = strtoull(str.c_str(), &end, 0);
+  if (end != NULL && end != str.c_str())
     return result;
 
   return fallback;
@@ -98,9 +73,8 @@ uint64_t str2uint64(const string &str, uint64_t fallback /* = 0 */)
 uint64_t str2uint64(const wstring &str, uint64_t fallback /* = 0 */)
 {
   wchar_t *end = NULL;
-  wstring tmp = trimRight(str);
-  uint64_t result = wcstoull(tmp.c_str(), &end, 0);
-  if (end == NULL || *end == '\0')
+  uint64_t result = wcstoull(str.c_str(), &end, 0);
+  if (end != NULL && end != str.c_str())
     return result;
 
   return fallback;
@@ -109,9 +83,8 @@ uint64_t str2uint64(const wstring &str, uint64_t fallback /* = 0 */)
 double str2double(const string &str, double fallback /* = 0.0 */)
 {
   char *end = NULL;
-  string tmp = trimRight(str);
-  double result = strtod(tmp.c_str(), &end);
-  if (end == NULL || *end == '\0')
+  double result = strtod(str.c_str(), &end);
+  if (end != NULL && end != str.c_str())
     return result;
 
   return fallback;
@@ -120,9 +93,8 @@ double str2double(const string &str, double fallback /* = 0.0 */)
 double str2double(const wstring &str, double fallback /* = 0.0 */)
 {
   wchar_t *end = NULL;
-  wstring tmp = trimRight(str);
-  double result = wcstod(tmp.c_str(), &end);
-  if (end == NULL || *end == '\0')
+  double result = wcstod(str.c_str(), &end);
+  if (end != NULL && end != str.c_str())
     return result;
 
   return fallback;
