@@ -170,6 +170,8 @@ bool win32_exception::write_minidump(EXCEPTION_POINTERS* pEp)
     LOG(LOGERROR, "MiniDumpWriteDump failed with error id %d", GetLastError());
     goto cleanup;
   }
+  
+  LOG(LOGNOTICE, "Minidump file \"%s\" was written", dumpFileName.c_str());
 
   returncode = true;
 
