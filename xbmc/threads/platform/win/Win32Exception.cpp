@@ -163,7 +163,8 @@ bool win32_exception::write_minidump(EXCEPTION_POINTERS* pEp)
   // Call the minidump api with normal dumping
   // We can get more detail information by using other minidump types but the dump file will be
   // extremely large.
-  BOOL bMiniDumpSuccessful = pDump(GetCurrentProcess(), GetCurrentProcessId(), hDumpFile, MiniDumpNormal, &mdei, 0, NULL);
+  BOOL bMiniDumpSuccessful = pDump(GetCurrentProcess(), GetCurrentProcessId(), hDumpFile, MINIDUMP_TYPE (MiniDumpNormal | MiniDumpWithHandleData |
+                                   MiniDumpWithIndirectlyReferencedMemory | MiniDumpWithProcessThreadData | MiniDumpWithThreadInfo | MiniDumpIgnoreInaccessibleMemory), &mdei, 0, NULL);
   if( !bMiniDumpSuccessful )
   {
     LOG(LOGERROR, "MiniDumpWriteDump failed with error id %d", GetLastError());
