@@ -116,6 +116,8 @@ bool win32_exception::write_minidump(EXCEPTION_POINTERS* pEp)
 {
   // Create the dump file where the xbmc.exe resides
   bool returncode = false;
+  HANDLE hDumpFile = INVALID_HANDLE_VALUE;
+  HMODULE hDbgHelpDll = NULL;
   std::string dumpFileName;
   CStdStringW dumpFileNameW;
   SYSTEMTIME stLocalTime;
@@ -129,7 +131,7 @@ bool win32_exception::write_minidump(EXCEPTION_POINTERS* pEp)
   dumpFileName = CWIN32Util::SmbToUnc(URIUtils::AddFileToFolder(CWIN32Util::GetProfilePath(), CUtil::MakeLegalFileName(dumpFileName)));
 
   g_charsetConverter.utf8ToW(dumpFileName, dumpFileNameW, false);
-  HANDLE hDumpFile = CreateFileW(dumpFileNameW.c_str(), GENERIC_WRITE, 0, 0, CREATE_ALWAYS, 0, 0);
+  hDumpFile = CreateFileW(dumpFileNameW.c_str(), GENERIC_WRITE, 0, 0, CREATE_ALWAYS, 0, 0);
 
   if (hDumpFile == INVALID_HANDLE_VALUE)
   {
@@ -138,7 +140,7 @@ bool win32_exception::write_minidump(EXCEPTION_POINTERS* pEp)
   }
 
   // Load the DBGHELP DLL
-  HMODULE hDbgHelpDll = ::LoadLibrary("DBGHELP.DLL");
+  hDbgHelpDll = ::LoadLibrary("DBGHELP.DLL");
   if (!hDbgHelpDll)
   {
     LOG(LOGERROR, "LoadLibrary 'DBGHELP.DLL' failed with error id %d", GetLastError());
