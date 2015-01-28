@@ -21,6 +21,7 @@
 
 #include "Event.h"
 #include "Thread.h"
+#include "SystemClock.h"
 
 class ITimerCallback
 {
@@ -49,9 +50,8 @@ protected:
   virtual void Process();
   
 private:
+  XbmcThreads::EndTime m_timeOut;
   ITimerCallback *m_callback;
-  uint32_t m_timeout;
   bool m_interval;
-  uint32_t m_endTime;
   CEvent m_eventTimeout;
 };

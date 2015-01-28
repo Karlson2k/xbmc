@@ -25,10 +25,9 @@
 
 CTimer::CTimer(ITimerCallback *callback)
   : CThread("Timer"),
+    m_timeOut(),
     m_callback(callback),
-    m_timeout(0),
-    m_interval(false),
-    m_endTime(0)
+    m_interval(false)
 { }
 
 CTimer::~CTimer()
@@ -41,7 +40,7 @@ bool CTimer::Start(uint32_t timeout, bool interval /* = false */)
   if (m_callback == NULL || timeout == 0 || IsRunning())
     return false;
 
-  m_timeout = timeout;
+  m_timeOut.Set(timeout);
   m_interval = interval;
 
   Create();
@@ -66,7 +65,7 @@ bool CTimer::Restart()
     return false;
 
   Stop(true);
-  return Start(m_timeout, m_interval);
+  return Start((uint32_t)m_timeOut.GetInitialTimeoutValue(), m_interval);
 }
 
 float CTimer::GetElapsedSeconds() const
@@ -79,21 +78,17 @@ float CTimer::GetElapsedMilliseconds() const
   if (!IsRunning())
     return 0.0f;
 
-  return (float)(XbmcThreads::SystemClockMillis() - (m_endTime - m_timeout));
+  return (float)(m_timeOut.GetElapsedMilliseconds());
 }
 
 void CTimer::Process()
 {
-  uint32_t currentTime = XbmcThreads::SystemClockMillis();
-  m_endTime = currentTime + m_timeout;
-
   while (!m_bStop)
   {
     // wait the necessary time
-    if (!m_eventTimeout.WaitMSec(m_endTime - currentTime))
+    if (!m_eventTimeout.WaitMSec(m_timeOut.MillisLeft()))
     {
-      currentTime = XbmcThreads::SystemClockMillis();
-      if (m_endTime <= currentTime)
+      if (m_timeOut.IsTimePast())
       {
         // execute OnTimeout() callback
         m_callback->OnTimeout();
@@ -102,7 +97,7 @@ void CTimer::Process()
         if (!m_interval)
           break;
 
-        m_endTime = currentTime + m_timeout;
+        m_timeOut.Restart();
       }
     }
   }
