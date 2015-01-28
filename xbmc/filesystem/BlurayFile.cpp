@@ -23,6 +23,7 @@
 #include "BlurayFile.h"
 #include "URL.h"
 #include "utils/StringUtils.h"
+#include <cassert>
 
 namespace XFILE
 {

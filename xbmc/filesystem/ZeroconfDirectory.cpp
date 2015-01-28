@@ -27,6 +27,7 @@
 #include "network/ZeroconfBrowser.h"
 #include "Directory.h"
 #include "utils/log.h"
+#include <cassert>
 
 using namespace XFILE;
 

@@ -29,6 +29,7 @@
 #include "utils/Variant.h"
 #include "utils/StringUtils.h"
 #include "interfaces/AnnouncementManager.h"
+#include <cassert>
 
 //using namespace std;
 using namespace MUSIC_INFO;

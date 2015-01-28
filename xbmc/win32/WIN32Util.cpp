@@ -44,6 +44,7 @@
 #include "utils/StringUtils.h"
 #include "win32/crts_caller.h"
 
+#include <cassert>
 #define DLL_ENV_PATH "special://xbmc/system/;" \
                      "special://xbmc/system/players/dvdplayer/;" \
                      "special://xbmc/system/players/paplayer/;" \

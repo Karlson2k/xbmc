@@ -35,6 +35,7 @@
 #include "win32/Win32File.h"
 #define CacheLocalFile CWin32File
 #endif // TARGET_WINDOWS
+#include <cassert>
 
 using namespace XFILE;
 

@@ -30,6 +30,7 @@
 #include "StringUtils.h"
 #include "URIUtils.h"
 #include "guilib/LocalizeStrings.h"
+#include <cassert>
 
 using namespace MUSIC_INFO;
 

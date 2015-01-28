@@ -25,6 +25,7 @@
 #include <list>
 #include "threads/CriticalSection.h"
 #include "threads/Event.h"
+#include <algorithm>
 
 struct DVDMessageListItem
 {

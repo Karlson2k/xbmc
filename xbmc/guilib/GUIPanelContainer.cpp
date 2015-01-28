@@ -22,6 +22,7 @@
 #include "GUIListItem.h"
 #include "GUIInfoManager.h"
 #include "Key.h"
+#include <cassert>
 
 using namespace std;
 
