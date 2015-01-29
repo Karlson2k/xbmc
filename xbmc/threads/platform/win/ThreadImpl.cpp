@@ -63,7 +63,7 @@ void CThread::SetThreadInfo()
 
   info.dwType = 0x1000;
   info.szName = m_ThreadName.c_str();
-  info.dwThreadID = m_ThreadId;
+  info.dwThreadID = -1;
   info.dwFlags = 0;
 
   __try
