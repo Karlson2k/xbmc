@@ -81,7 +81,6 @@ public:
 
   static bool IsCurrentThread(const ThreadIdentifier tid);
   static ThreadIdentifier GetCurrentThreadId();
-  static CThread* GetCurrentThread();
   static inline void SetLogger(XbmcCommons::ILogger* logger_) { CThread::logger = logger_; }
   static inline XbmcCommons::ILogger* GetLogger() { return CThread::logger; }
 

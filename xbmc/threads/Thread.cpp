@@ -30,8 +30,6 @@
 #define __STDC_FORMAT_MACROS
 #include <inttypes.h>
 
-static XbmcThreads::ThreadLocal<CThread> currentThread;
-
 XbmcCommons::ILogger* CThread::logger = NULL;
 
 #include "threads/platform/ThreadImpl.cpp"
@@ -125,7 +123,6 @@ THREADFUNC CThread::staticThread(void* data)
 
   LOG(LOGNOTICE,"Thread %s start, auto delete: %s", name.c_str(), (autodelete ? "true" : "false"));
 
-  currentThread.set(pThread);
   pThread->m_StartEvent.Set();
 
   pThread->Action();
@@ -182,11 +179,6 @@ void CThread::Process()
 bool CThread::IsCurrentThread() const
 {
   return IsCurrentThread(ThreadId());
-}
-
-CThread* CThread::GetCurrentThread()
-{
-  return currentThread.get();
 }
 
 void CThread::Sleep(unsigned int milliseconds)
