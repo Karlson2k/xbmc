@@ -196,6 +196,5 @@ float CThread::GetRelativeUsage()
 
 void CThread::SetSignalHandlers()
 {
-  // install win32 exception translator
-  win32_exception::install_handler();
+  // nothing to do on Win32
 }
