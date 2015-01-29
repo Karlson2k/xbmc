@@ -74,9 +74,9 @@ void CThread::SetThreadInfo()
   {
   }
 
-  CWIN32Util::SetThreadLocalLocale(true); // avoid crashing with setlocale(), see https://connect.microsoft.com/VisualStudio/feedback/details/794122
+  win32_exception::install_handler();
 
-    win32_exception::install_handler();
+  CWIN32Util::SetThreadLocalLocale(true); // avoid crashing with setlocale(), see https://connect.microsoft.com/VisualStudio/feedback/details/794122
 }
 
 ThreadIdentifier CThread::GetCurrentThreadId()
